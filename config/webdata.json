@@ -1,4 +1,5 @@
 {
     "ConnectionString" : "mongodb://127.0.0.1:27017/MealPrepping",
-    "TokenKeyString" : "InitialKey"
+    "TokenKeyString" : "InitialKey",
+    "TokenExpiredAfter" : "30m"
 }

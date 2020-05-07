@@ -24,9 +24,14 @@ router.post('/users/login', async (req, res) => {
 
 //đăng xuất
 router.post('/users/logout',auth , async (req, res) => {
-    //Kiểm tra xem đã đăng nhập chưa
-    //Lấy User và xóa token
-    //Lưu lại và gửi status code: 200
+    try{
+        req.user.tokens = await req.user.tokens.filter(token => token.token != req.token)
+        await req.user.save()
+        res.send({status: 'OK'})
+
+    }catch (e){
+        res.status(400).send(e.message)
+    }
 })
 
 //đăng ký
