@@ -5,6 +5,8 @@
     "invalidEmail": "Email is not valid",
     "inactiveEmai": "Email is not activated",
     "emailIsUsed": "Email is already used",
-    "passwordContainsPassword": "Password cannot contains 'Password'"
-
+    "passwordContainsPassword": "Password cannot contains 'Password'",
+    "unAuthenticate": "You are not Authenticated",
+    "invalidRequest": "Request contains invalid infomation",
+    "nameNotProvided": "Name must be provided"
 }

@@ -2,13 +2,13 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { unableToLogin, invalidAge, invalidEmail, emailIsUsed, passwordContainsPassword } = require('../utils/getErrMessage')
+const { unableToLogin, invalidAge, invalidEmail, emailIsUsed, passwordValidate, nameNotProvided } = require('../utils/getErrMessage')
 const { TokenKeyString } = require('../utils/getWebdata')
 
 const userSchema = new mongoose.Schema({
     name : {
         type: String,
-        required: true,
+        required: [true, nameNotProvided],
         trim: true
     },
     password : {
@@ -18,13 +18,13 @@ const userSchema = new mongoose.Schema({
         trim: true,
         validate(value){
             if(value.toLowerCase().includes('password')){
-                throw new Error(passwordContainsPassword)
+                throw new Error(passwordValidate)
             }
         }
     },
     email: {
         type: String,
-        unique: true,
+        unique: [true, emailIsUsed],
         required: true,
         trim: true,
         lowercase: true,
@@ -54,13 +54,31 @@ const userSchema = new mongoose.Schema({
         }
     }]
 })
+//Unique validation message change
+userSchema.post('save', function(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+      next(new Error('email must be unique'));
+    } else {
+      next();
+    }
+});
 
 userSchema.methods.consolelog = async function() {
     console.log(this)
 }
 
 //Lọc dữ liệu trước khi trả client
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject()
 
+    delete userObject.password
+    delete userObject.tokens
+    delete userObject._id
+    delete userObject.avatar
+
+    return userObject
+}
 
 //Hàm cấp token cho user
 userSchema.methods.generateAuthToken = async function () {
@@ -86,13 +104,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
     }
 
     return user
-}
-
-//Hàm tạo tài khoản người dùng
-userSchema.statics.createNew = async (email, password) => {
-    const user = await User.findOne({email})
-
-    if(user) { throw new Error(emailIsUsed)}
 }
 
 //Hashing sẽ luôn được thực hiện khi người dùng lưu User vời thông tin mk mới
