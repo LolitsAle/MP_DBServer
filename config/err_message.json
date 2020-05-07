@@ -1,0 +1,10 @@
+{
+    "unableToLogin": "Invalid email or password",
+    "invalidSession": "Invalid Session",
+    "invalidAge": "Age must be positive",
+    "invalidEmail": "Email is not valid",
+    "inactiveEmai": "Email is not activated",
+    "emailIsUsed": "Email is already used",
+    "passwordContainsPassword": "Password cannot contains 'Password'"
+
+}

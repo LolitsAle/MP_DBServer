@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { unableToLogin, invalidAge, invalidEmail, emailIsUsed, passwordContainsPassword } = require('../utils/getErrMessage')
+const { TokenKeyString } = require('../utils/getWebdata')
 
 const userSchema = new mongoose.Schema({
     name : {
@@ -16,7 +18,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         validate(value){
             if(value.toLowerCase().includes('password')){
-                throw new Error('Password cannot contains "password"')
+                throw new Error(passwordContainsPassword)
             }
         }
     },
@@ -28,20 +30,20 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         validate(value) {
             if(!validator.isEmail(value)) {
-                throw new Error('Email is invalid!')
+                throw new Error(invalidEmail)
             }
         }
     },
     isactive: {
         type: Boolean,
-        default:false
+        default: false
     },
     age: {
         type: Number,
         default: 0,
         validate(value) {
-            if(value < 0) {
-                throw  new Error('Tuổi phải là một số nguyên dương')
+            if(value <= 0) {
+                throw  new Error(invalidAge)
             }
         }
     },
@@ -63,9 +65,8 @@ userSchema.methods.consolelog = async function() {
 //Hàm cấp token cho user
 userSchema.methods.generateAuthToken = async function () {
     const user = this
-    const token = jwt.sign({_id : user._id.toString()}, "Thisistest" )
+    const token = jwt.sign({_id : user._id.toString()}, TokenKeyString )
 
-    //adding tokens to the user data
     user.tokens = user.tokens.concat({ token })
     await user.save()
 
@@ -76,15 +77,22 @@ userSchema.methods.generateAuthToken = async function () {
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({email})
 
-    if(!user) { throw new Error('Unable to login')}
+    if(!user) { throw new Error(unableToLogin)}
 
     const isMatch = await bcrypt.compare(password, user.password)
 
     if(!isMatch) {
-        throw new Error('Unable to login')
+        throw new Error(unableToLogin)
     }
 
     return user
+}
+
+//Hàm tạo tài khoản người dùng
+userSchema.statics.createNew = async (email, password) => {
+    const user = await User.findOne({email})
+
+    if(user) { throw new Error(emailIsUsed)}
 }
 
 //Hashing sẽ luôn được thực hiện khi người dùng lưu User vời thông tin mk mới
