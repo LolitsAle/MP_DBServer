@@ -10,7 +10,7 @@ router.post('/users/login', async (req, res) => {
 
         const user = await User.findByCredentials(req.body.email, req.body.password)
 
-        if(user.isactive == "false"){
+        if(user.isactive === false){
             throw new Error( inactiveEmail )
         }
 
@@ -59,4 +59,13 @@ router.post('/users/signup', async (req, res) => {
     }
 })
 
+//gửi mail kích hoạt
+router.post('/users/sendactivatemail', async (req, res) => {
+    
+})
+
+//route truy cập giỏ hàng của người dùng
+router.post('/users/table/me', auth, async (req, res) => {
+
+})
 module.exports = router

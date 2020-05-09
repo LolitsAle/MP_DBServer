@@ -3,7 +3,7 @@
     "invalidSession": "Invalid Session",
     "invalidAge": "Age must be positive",
     "invalidEmail": "Email is not valid",
-    "inactiveEmai": "Email is not activated",
+    "inactiveEmail": "Email is not activated",
     "emailIsUsed": "Email is already used",
     "passwordContainsPassword": "Password cannot contains 'Password'",
     "unAuthenticate": "You are not Authenticated",

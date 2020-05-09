@@ -47,13 +47,17 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
+    role: {
+        type: String,
+        default: "user"
+    },
     tokens: [{
         token: {
             type: String,
-            require: true
         }
     }]
 })
+
 //Unique validation message change
 userSchema.post('save', function(error, doc, next) {
     if (error.name === 'MongoError' && error.code === 11000) {
@@ -83,6 +87,7 @@ userSchema.methods.toJSON = function () {
 //Hàm cấp token cho user
 userSchema.methods.generateAuthToken = async function () {
     const user = this
+    //dùng id để cấp token
     const token = jwt.sign({_id : user._id.toString()}, TokenKeyString, {expiresIn : TokenExpiredAfter} )
 
     user.tokens = user.tokens.concat({ token })
