@@ -8,5 +8,9 @@
     "passwordContainsPassword": "Password cannot contains 'Password'",
     "unAuthenticate": "You are not Authenticated",
     "invalidRequest": "Request contains invalid infomation",
-    "nameNotProvided": "Name must be provided"
+    "nameNotProvided": "Name must be provided",
+    "cannotFindEmail": "cannot find your email, please resignup or try another mail",
+    "incorrectActivationCode" : "Your activation code is not correct, please try again",
+    "mailAlreadyActivated" : "Email is already activated"
+
 }

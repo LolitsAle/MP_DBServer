@@ -29,3 +29,19 @@ app.listen(port,() => {
 })
 
 //===============TEST GROUND===================
+// const userTable = require('./models/usertable')
+// const user = require('./models/user')
+// const testfunction = async () => {
+//     // const table = await userTable.findById('5eb69b73719b792e6cfb29b6')
+//     // await table.populate('userid').execPopulate()
+//     // console.log(table)
+
+//     // const tuser = await user.findById('5eb68a360c711803f4a5ab41')
+//     // await tuser.populate('tables').execPopulate()
+//     // console.log(tuser.tables)
+    
+// }
+// testfunction()
+//===============TEST GROUND===================
+
+

@@ -4,6 +4,10 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const userTableSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        default: "Your Table"
+    },
     userid : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -17,6 +21,6 @@ const userTableSchema = new mongoose.Schema({
     }]
 })
 
-const UserTable = mongoose.model('Tag', userTableSchema)
+const UserTable = mongoose.model('UserTable', userTableSchema)
 
 module.exports = UserTable

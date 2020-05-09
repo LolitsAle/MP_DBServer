@@ -38,6 +38,9 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    activationcode: {
+        type: String
+    },
     age: {
         type: Number,
         default: 0,
@@ -56,6 +59,12 @@ const userSchema = new mongoose.Schema({
             type: String,
         }
     }]
+})
+
+userSchema.virtual('tables', {
+    ref: 'UserTable',
+    localField: '_id',
+    foreignField: 'userid'
 })
 
 //Unique validation message change
