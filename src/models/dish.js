@@ -3,7 +3,7 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const productSchema = new mongoose.Schema({
+const dishSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "product name cannot be empty"],
@@ -17,9 +17,31 @@ const productSchema = new mongoose.Schema({
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
-    }
+    },
+    tags: [{
+        tagid: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Tag'
+        }
+    }],
+    kcal: {
+        type: Number
+    },
+    mainpicture: {
+        type: Buffer
+    },
+    gallery: [{
+        //dữ liệu hình ảnh
+        picname: {
+            type: String,
+            default: 'productpic'
+        },
+        binarydata: {
+            type: Buffer
+        }
+    }]
 })
 
-const Product = mongoose.model('Product', productSchema)
+const Dish = mongoose.model('Dish', dishSchema)
 
-module.exports = Product
+module.exports = Dish

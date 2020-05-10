@@ -12,14 +12,24 @@ const userTableSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    products : [{
+    dishes : [{
         _id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'Product'
+            ref: 'Dish'
         }
     }]
 })
+
+//lọc dữ liệu trước khi gửi về
+userTableSchema.methods.toJSON = function () {
+    const userTable = this
+    const userTableObject = userTable.toObject()
+
+    // delete userTableObject.dishes
+
+    return userTableObject
+}
 
 const UserTable = mongoose.model('UserTable', userTableSchema)
 

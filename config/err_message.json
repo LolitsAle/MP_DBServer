@@ -11,6 +11,7 @@
     "nameNotProvided": "Name must be provided",
     "cannotFindEmail": "cannot find your email, please resignup or try another mail",
     "incorrectActivationCode" : "Your activation code is not correct, please try again",
+    "incorrectRecoverCode" : "Your recover code is not correct, please try again",
     "mailAlreadyActivated" : "Email is already activated"
 
 }

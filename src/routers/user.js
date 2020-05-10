@@ -3,9 +3,15 @@ const router = new express.Router()
 const User = require('../models/user')
 const userTable = require('../models/usertable')
 const auth = require('./../middleware/auth')
+
 const generateActivationCode = require('../utils/generateActivationCode')
+const generateRecoverCode = require('../utils/generateRecoverCode')
 const sendActivationMail = require('../utils/sendActivationMail')
-const { inactiveEmail, invalidRequest, cannotFindEmail, incorrectActivationCode, mailAlreadyActivated } = require('../utils/getErrMessage')
+const sendRecoverMail = require('../utils/sendRecoverMail')
+const verifyToken = require('../utils/verifyToken')
+
+const { inactiveEmail, invalidRequest, cannotFindEmail, incorrectActivationCode, mailAlreadyActivated, incorrectRecoverCode } = require('../utils/getErrMessage')
+
 
 //đăng nhập
 router.post('/users/login', async (req, res) => {
@@ -54,9 +60,8 @@ router.post('/users/signup', async (req, res) => {
 
     try{
         await user.save()
-        const token = await user.generateAuthToken()
         
-        res.send({Status: 'OK', token})
+        res.send({Status: 'OK'})
     }catch (e) {
         res.status(401).send({error : e.message})
     }
@@ -143,9 +148,8 @@ router.post('/users/mailactivate', async (req, res) => {
 router.get('/users/table/me', auth, async (req, res) => {
     try{
         await req.user.populate('tables').execPopulate()
-        //remove products
-        delete req.user.tables.products
 
+        //remove products
         res.send(req.user.tables)
 
     }catch(e) {
@@ -153,4 +157,81 @@ router.get('/users/table/me', auth, async (req, res) => {
     }
 })
 
+//route upload hình ảnh đại diện cho người dùng
+router.post('/users/avatar/upload', auth, async (req, res) => {
+
+})
+
+//route gửi mail phục hồi/đổi mật khẩu
+router.post('/users/password/sendrecovermail', async(req, res) => {
+    try{
+        //tạo một recover code cho user và lưu vào database
+        const code = generateRecoverCode()
+        const user = await User.findOne({email : req.body.email})
+
+        if(!user) {
+            res.status(401).send({error : cannotFindEmail})
+        }
+
+        user.passwordrecovercode = code
+        await user.save()
+    
+        //gửi mail
+        sendRecoverMail(req.body.email, code, (error, response) => {
+            if(error) {
+                res.status(401).send()
+            }else{
+                res.send(response)
+            }
+        })
+    }catch (e) {
+        res.status(401).send()
+    }
+})
+
+//route kiểm tra mã phục hồi/đổi mật khẩu
+router.get('/users/password/getrecovertoken', async (req, res) => {
+    try{
+        const user = await User.findOne({email : req.query.email})
+
+
+        if(!user) {
+           res.status(401).send({error : cannotFindEmail})
+        }
+
+        //kiểm tra mã phục hồi
+        if(req.query.code == user.passwordrecovercode ) {
+            const recovertoken = await user.generateRecoverToken()
+           
+            res.send({Status : 'OK', recovertoken })
+        }else{
+            res.status(202).send({error : incorrectRecoverCode })
+        }
+    }catch (e) {
+        res.status(400).send({error : e.message})
+    }
+})
+
+//route phục hồi/đổi mật khẩu
+//request body {email, recovertoken, newpassword}
+router.post('/users/password/changepassword', async (req, res) => {
+    try{
+        
+        const user = await User.findOne({email : req.body.email})
+        const rtoken = req.body.recovertoken
+
+        //kiểm tra recover token còn hiệu lực hay không
+        if(rtoken == user.recoveringtoken && verifyToken(rtoken) == true) {
+            user.password = req.body.password
+            await user.save()
+
+            res.send({Status : 'OK'})
+        }else{
+            throw new Error('Failed to verify your request')
+        }
+
+    }catch (e) {
+        res.status(400).send({error: e.message})
+    }
+})
 module.exports = router

@@ -2,6 +2,7 @@
     "ConnectionString" : "mongodb://127.0.0.1:27017/MealPrepping",
     "TokenKeyString" : "InitialKey",
     "TokenExpiredAfter" : "30m",
+    "RecoverTokenExpireAfter" : "10m",
     "hostMail" : "songas000@gmail.com",
     "hostName" : "Sơn đẹp trai",
     "mailPassword" : "sonlanguoisieudeptrai",

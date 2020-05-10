@@ -3,7 +3,7 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { unableToLogin, invalidAge, invalidEmail, emailIsUsed, passwordValidate, nameNotProvided } = require('../utils/getErrMessage')
-const { TokenKeyString, TokenExpiredAfter } = require('../utils/getWebdata')
+const { TokenKeyString, TokenExpiredAfter, RecoverTokenExpireAfter } = require('../utils/getWebdata')
 
 const userSchema = new mongoose.Schema({
     name : {
@@ -21,6 +21,13 @@ const userSchema = new mongoose.Schema({
                 throw new Error(passwordValidate)
             }
         }
+    },
+    recoveringtoken: {
+        type: String,
+        default: undefined
+    },
+    passwordrecovercode: {
+        type: String
     },
     email: {
         type: String,
@@ -40,6 +47,9 @@ const userSchema = new mongoose.Schema({
     },
     activationcode: {
         type: String
+    },
+    avatar: {
+        type: Buffer
     },
     age: {
         type: Number,
@@ -100,6 +110,19 @@ userSchema.methods.generateAuthToken = async function () {
     const token = jwt.sign({_id : user._id.toString()}, TokenKeyString, {expiresIn : TokenExpiredAfter} )
 
     user.tokens = user.tokens.concat({ token })
+    await user.save()
+
+    return token
+}
+
+//Hàm cấp token phục hồi
+userSchema.methods.generateRecoverToken = async function() {
+    const user = this
+    //dùng id để cấp token
+    const token = jwt.sign({_id : user._id.toString()}, TokenKeyString, {expiresIn : RecoverTokenExpireAfter} )
+
+    user.recoveringtoken = token
+    user.passwordrecovercode = undefined
     await user.save()
 
     return token
