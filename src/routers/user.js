@@ -1,8 +1,12 @@
 const express = require('express')
 const router = new express.Router()
+const multer = require('multer')
+const sharp = require('sharp')
+
 const User = require('../models/user')
 const userTable = require('../models/usertable')
 const auth = require('./../middleware/auth')
+const requireadmin = require('../middleware/requireadmin')
 
 const generateActivationCode = require('../utils/generateActivationCode')
 const generateRecoverCode = require('../utils/generateRecoverCode')
@@ -10,7 +14,7 @@ const sendActivationMail = require('../utils/sendActivationMail')
 const sendRecoverMail = require('../utils/sendRecoverMail')
 const verifyToken = require('../utils/verifyToken')
 
-const { inactiveEmail, invalidRequest, cannotFindEmail, incorrectActivationCode, mailAlreadyActivated, incorrectRecoverCode } = require('../utils/getErrMessage')
+const { inactiveEmail, invalidRequest, cannotFindEmail, cannotFindInfo, incorrectActivationCode, mailAlreadyActivated, incorrectRecoverCode, UpdateFailed, InvalidUserUpdate, ImageRequired } = require('../utils/getErrMessage')
 
 
 //đăng nhập
@@ -66,6 +70,92 @@ router.post('/users/signup', async (req, res) => {
         res.status(401).send({error : e.message})
     }
 })
+
+//route truy cập giỏ hàng của người dùng
+router.get('/users/table/me', auth, async (req, res) => {
+    try{
+        await req.user.populate('tables').execPopulate()
+
+        //remove products
+        res.send(req.user.tables)
+
+    }catch(e) {
+        res.status(400).send({error : e.message})
+    }
+})
+
+//upload ảnh đại diện
+const avatar = multer({
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            cb(new Error(ImageRequired))
+        }
+        cb(undefined, true)
+    }
+})
+
+router.post('/users/me/avatar', auth, avatar.single('avatar'), async (req, res) => {
+    const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
+
+    req.user.avatar = buffer
+    await req.user.save()
+
+    res.send()
+}, (error, req, res, next) => {
+    res.status(400).send({error : error.message})
+})
+
+//lấy thông tin của mình
+router.get('/users/me', auth, async(req, res) => {
+    try{
+        res.send(req.user)
+    }catch (e) {
+        res.status(400).send({error : e.message})
+    }
+})
+
+//lấy thông tin người dùng khác
+router.get('/users/:id', async (req, res) => {
+    try{
+        const user = await User.findById(req.params.id)
+
+        if(!user) {
+            throw new Error(cannotFindInfo)
+        }
+
+        res.send(user)
+    }catch (e) {
+        res.status(400).send({error : e.message})
+    }
+})
+
+//cập nhật thông tin người dùng
+router.patch('/users/me', auth, async (req,res) => {
+
+    const updates = Object.keys(req.body)
+    const validUpdates = ["name","age", "gender", "address"]
+    const isUpdatesValid = updates.every((item) => {
+        if(validUpdates.includes(item)) return true
+    })
+
+    if(!isUpdatesValid) {
+        return res.status(400).send({error : InvalidUserUpdate})
+    }
+
+    try{
+        updates.forEach((update) => req.user[update] = req.body[update])
+        await req.user.save()
+
+        res.status(200).send({status : 'OK'})
+    }catch(e) {
+        res.status(400).send({error : UpdateFailed})
+    }
+
+})
+//sửa& xóa người dùng/ xóa luôn giỏ hàng của người dùng, yêu cầu quyền admin
 
 //tạo usertable mới
 router.post('/users/createnewtable', auth, async (req, res) => {
@@ -144,24 +234,6 @@ router.post('/users/mailactivate', async (req, res) => {
     }
 })
 
-//route truy cập giỏ hàng của người dùng
-router.get('/users/table/me', auth, async (req, res) => {
-    try{
-        await req.user.populate('tables').execPopulate()
-
-        //remove products
-        res.send(req.user.tables)
-
-    }catch(e) {
-        res.status(400).send({error : e.message})
-    }
-})
-
-//route upload hình ảnh đại diện cho người dùng
-router.post('/users/avatar/upload', auth, async (req, res) => {
-
-})
-
 //route gửi mail phục hồi/đổi mật khẩu
 router.post('/users/password/sendrecovermail', async(req, res) => {
     try{
@@ -194,7 +266,6 @@ router.get('/users/password/getrecovertoken', async (req, res) => {
     try{
         const user = await User.findOne({email : req.query.email})
 
-
         if(!user) {
            res.status(401).send({error : cannotFindEmail})
         }
@@ -220,9 +291,14 @@ router.post('/users/password/changepassword', async (req, res) => {
         const user = await User.findOne({email : req.body.email})
         const rtoken = req.body.recovertoken
 
+        if(!user) {
+            res.status(401).send({error : cannotFindEmail})
+        }
+
         //kiểm tra recover token còn hiệu lực hay không
         if(rtoken == user.recoveringtoken && verifyToken(rtoken) == true) {
             user.password = req.body.password
+            user.recoveringtoken = undefined //xóa token
             await user.save()
 
             res.send({Status : 'OK'})
@@ -234,4 +310,5 @@ router.post('/users/password/changepassword', async (req, res) => {
         res.status(400).send({error: e.message})
     }
 })
+//cấp quyền admin bằng secretkey
 module.exports = router

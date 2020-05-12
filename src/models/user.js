@@ -60,6 +60,13 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
+    gender: {
+        type: String,
+        default: 'Unknown'
+    },
+    address: {
+        type: String
+    },
     role: {
         type: String,
         default: "user"
@@ -98,7 +105,15 @@ userSchema.methods.toJSON = function () {
     delete userObject.password
     delete userObject.tokens
     delete userObject._id
-    delete userObject.avatar
+    delete userObject.role
+    
+    delete userObject.isactive
+    delete userObject.activationcode
+    
+    delete userObject.passwordrecovercode
+    delete userObject.recoveringtoken
+
+    delete userObject.__v
 
     return userObject
 }

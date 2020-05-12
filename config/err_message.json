@@ -12,6 +12,15 @@
     "cannotFindEmail": "cannot find your email, please resignup or try another mail",
     "incorrectActivationCode" : "Your activation code is not correct, please try again",
     "incorrectRecoverCode" : "Your recover code is not correct, please try again",
-    "mailAlreadyActivated" : "Email is already activated"
-
+    "mailAlreadyActivated" : "Email is already activated",
+    "lackPermission" : "you dont have permission to do this, please contact our staff for more infomation.",
+    "UsedProductName" : "This name already been used", 
+    "ProductNameEmpty" : "dishes name cannot be empty",
+    "NegativePrice": "Price cannot be negative",
+    "InvalidPromotionPrice": "promotion must be lower than price",
+    "Negativekcal" : "Kcal cannot be negative",
+    "UpdateFailed": "An unexpected Error that makes updating cannot finish",
+    "InvalidUserUpdate": "Update requests contains invalid elements",
+    "cannotFindInfo": "Cannot find requested info",
+    "ImageRequired": "File format is not correct"
 }
