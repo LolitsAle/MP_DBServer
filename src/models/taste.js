@@ -6,14 +6,16 @@ const jwt = require('jsonwebtoken')
 const TasteSchema = new mongoose.Schema({
     name: {
         type: String,
-        default: 'Unknown Tag'
+        required: true
     },
     description: {
         type: String,
-        default: ''
+        default: 'Description has not been set.'
     }
+},{
+    timestamps: true
 })
 
 const Taste = mongoose.model('Taste', TasteSchema)
 
-module.exports = Tag
+module.exports = Taste

@@ -3,12 +3,16 @@ const bodyparser = require('body-parser')
 require('./database/mongodb')
 
 const userRouter = require('./routers/user')
+const dishRouter = require('./routers/dish')
+const adminRouter = require('./routers/admin')
 
 const app = express()
 
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended: true}))
 app.use(userRouter)
+app.use(dishRouter)
+app.use(adminRouter)
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

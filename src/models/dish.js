@@ -13,9 +13,9 @@ const dishSchema = new mongoose.Schema({
         unique: [true, UsedProductName],
         trim: true
     },
-    desciption: {
+    description: {
         type: String,
-        default: "Description for this forduct has not been set..."
+        default: "Description for this dish has not been set..."
     },
     price: {
         type: Number,
@@ -75,6 +75,8 @@ const dishSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
+},{
+    timestamps: true
 })
 
 const Dish = mongoose.model('Dish', dishSchema)
