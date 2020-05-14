@@ -185,7 +185,7 @@ router.post('/ingredient', auth, requireadmin, async (req, res) => {
 //cập nhật 1 taste
 router.patch('/ingredient/:id', auth, requireadmin, async (req, res) => {
     const request = Object.keys(req.body)
-    const validRequest = ["name","description"] //mảng chứa các phẩn tử cho phép
+    const validRequest = ["name","description","source"] //mảng chứa các phẩn tử cho phép
     const isRequestValid = request.every((item) => {
         if(validRequest.includes(item)) return true
     })

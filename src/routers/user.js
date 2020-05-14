@@ -63,9 +63,20 @@ router.post('/users/signup', async (req, res) => {
     const user = new User(req.body)
 
     try{
+        const code = generateActivationCode()
+        user.activationcode = code
         await user.save()
+    
+        //gửi mail
+        sendActivationMail(req.body.email, code, (error, response) => {
+            if(error) {
+                res.status(401).send()
+            }else{
+                res.send(response)
+            }
+        })
         
-        res.send({Status: 'OK'})
+        res.send({Status: 'OK', Message: 'Activation mail has been sent'})
     }catch (e) {
         res.status(401).send({error : e.message})
     }
