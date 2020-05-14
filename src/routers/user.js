@@ -72,11 +72,9 @@ router.post('/users/signup', async (req, res) => {
             if(error) {
                 res.status(401).send()
             }else{
-                res.send(response)
+                res.send({Status: 'OK', Message: 'Activation mail has been sent'})
             }
         })
-        
-        res.send({Status: 'OK', Message: 'Activation mail has been sent'})
     }catch (e) {
         res.status(401).send({error : e.message})
     }
