@@ -26,6 +26,16 @@ router.get('/category/:id', async (req, res) => {
     }
     
 })
+//lay toàn bo danh sach category
+router.get('/category', async (req, res) => {
+    try{
+        const categories = await Category.find({})
+
+        res.send(categories)
+    }catch (e) {
+        res.status(400).send({error : e.message})
+    }
+})
 //them category moi
 router.post('/category', auth, requireadmin, async (req, res) => {
     const category = new Category(req.body)
@@ -98,6 +108,16 @@ router.get('/taste/:id', async (req, res) => {
     }
     
 })
+//lay toàn bo danh sach taste
+router.get('/taste', async (req, res) => {
+    try{
+        const taste = await Taste.find({})
+
+        res.send(taste)
+    }catch (e) {
+        res.status(400).send({error : e.message})
+    }
+})
 //them taste moi
 router.post('/taste', auth, requireadmin, async (req, res) => {
     const taste = new Taste(req.body)
@@ -169,6 +189,16 @@ router.get('/ingredient/:id', async (req, res) => {
         res.status(400).send({error : e.message})
     }
     
+})
+//lay toàn bo danh sach ingredient
+router.get('/ingredient', async (req, res) => {
+    try{
+        const ingredient = await Ingredient.find({})
+
+        res.send(ingredient)
+    }catch (e) {
+        res.status(400).send({error : e.message})
+    }
 })
 //them ingredient moi
 router.post('/ingredient', auth, requireadmin, async (req, res) => {

@@ -26,25 +26,20 @@ const dishSchema = new mongoose.Schema({
         } 
     },
     promotionprice: {
-        type: Number,
-        validate(value) {
-            if(value >= price) {
-                throw new Error(InvalidPromotionPrice)
-            }
-        } 
+        type: Number
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
     },
     tastes: [{
-        tasteid: {
+        taste: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Tag'
+            ref: 'Taste'
         }
     }],
     ingredients: [{
-        ingredientid: {
+        ingredient: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Ingredient'
         }
@@ -78,6 +73,43 @@ const dishSchema = new mongoose.Schema({
 },{
     timestamps: true
 })
+
+//Lọc dữ liệu trước khi trả client
+dishSchema.methods.toJSON = function () {
+    const dish = this
+    const dishObject = dish.toObject()
+
+    dishObject.ingredients.forEach(element => {
+        delete element._id
+    });
+
+    dishObject.tastes.forEach(element => {
+        delete element._id
+    });
+
+    return dishObject
+}
+
+//Unique validation message change
+dishSchema.post('save', function(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+      next(new Error('Dish already exist, use another name'));
+    } else {
+      next();
+    }
+});
+
+dishSchema.pre('save', function(next) {
+    const dish = this
+
+    if(dish.promotionprice >= dish.price){
+        throw new Error('Promotion price must be lower than price')
+    }
+    
+    next()
+})
+
+
 
 const Dish = mongoose.model('Dish', dishSchema)
 
