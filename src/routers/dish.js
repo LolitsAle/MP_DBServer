@@ -1,5 +1,7 @@
 const express = require('express')
 const router = new express.Router()
+const multer = require('multer')
+const sharp = require('sharp')
 
 const Dish = require('../models/dish')
 const Category = require('../models/category')
@@ -202,6 +204,51 @@ router.patch('/dishes/:id/updatetastes', auth, requireadmin, async (req, res) =>
         res.status(400).send({error : e.message})
     }
 })
+
+//thêm ảnh chính cho món ăn
+const mainpic = multer({
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            cb(new Error(ImageRequired))
+        }
+        cb(undefined, true)
+    }
+})
+
+router.post('/dishes/:id/uploadmainpic', auth, requireadmin, mainpic.single('mainpic'), async (req, res)=> {
+    try{
+        const dish = await Dish.findById(req.params.id)
+
+        if(!dish) {
+            throw new Error('dish cannot be found')
+        }
+
+        const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
+
+        dish.mainpicture = buffer
+        await dish.save()
+
+        res.send()
+    }catch (e) {
+        res.status(400).send({error: e.message})
+    }
+})
+
+//lấy ảnh của 1 sản phẩm
+router.get('/dishes/:id/getmainpic', async (req, res)=>{
+    const dish = await Dish.findById(req.params.id)
+
+    if(!dish) {
+        throw new Error('dish cannot be found')
+    }
+
+    res.set('Content-Type', 'image/png')
+    res.send(dish.mainpicture)
+})
+//tạo thư viện ảnh cho món ăn 
 
 //đánh giá/ comment sản phẩm (để sau)
 

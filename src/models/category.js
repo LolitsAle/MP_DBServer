@@ -12,7 +12,17 @@ const CategorySchema = new mongoose.Schema({
     description: {
         type: String,
         default: "Description has not been set."
-    }
+    },
+    child: [{
+        name: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String,
+            default: "Description has not been set."
+        }
+    }]
 },{
     timestamps: true
 })

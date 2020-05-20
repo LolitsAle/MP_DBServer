@@ -6,6 +6,8 @@ const userRouter = require('./routers/user')
 const dishRouter = require('./routers/dish')
 const adminRouter = require('./routers/admin')
 
+const generatedemodata = require('./utils/generateDemodata')
+
 const app = express()
 
 app.use(bodyparser.json())
@@ -26,6 +28,16 @@ const port = process.env.PORT || 4000
 
 app.get('',(req,res) =>{
     res.send('connected')
+})
+
+app.post('/generatedemodata', (req, res) => {
+    try{
+        generatedemodata()
+
+        res.send({status : 'OK'})
+    }catch (e) {
+        res.status(400).send({error : e.message})
+    }
 })
 
 app.listen(port,() => {

@@ -255,6 +255,7 @@ router.post('/users/mailactivate', async (req, res) => {
         if(req.body.code === user.activationcode ) {
 
             user.isactive = true
+            user.activationcode = undefined
             await user.save()
 
             res.send({Status : 'email activated' })
@@ -305,7 +306,8 @@ router.get('/users/password/getrecovertoken', async (req, res) => {
         //kiểm tra mã phục hồi
         if(req.query.code == user.passwordrecovercode ) {
             const recovertoken = await user.generateRecoverToken()
-           
+            user.passwordrecovercode = undefined
+            
             res.send({Status : 'OK', recovertoken })
         }else{
             res.status(202).send({error : incorrectRecoverCode })

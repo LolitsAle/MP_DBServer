@@ -30,7 +30,7 @@ const dishSchema = new mongoose.Schema({
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category'
+        ref: 'Category.child'
     },
     tastes: [{
         taste: {
@@ -56,8 +56,8 @@ const dishSchema = new mongoose.Schema({
     mainpicture: {
         type: Buffer
     },
+    //kho hình ảnh
     gallery: [{
-        //dữ liệu hình ảnh
         picname: {
             type: String,
             default: 'productpic'
