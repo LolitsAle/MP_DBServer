@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+
+const {childCateSchema} = require('./childcategory')
 
 const CategorySchema = new mongoose.Schema({
     name: {
@@ -9,20 +8,7 @@ const CategorySchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    description: {
-        type: String,
-        default: "Description has not been set."
-    },
-    child: [{
-        name: {
-            type: String,
-            required: true
-        },
-        description: {
-            type: String,
-            default: "Description has not been set."
-        }
-    }]
+    child: [childCateSchema]
 },{
     timestamps: true
 })

@@ -13,10 +13,14 @@ const userTableSchema = new mongoose.Schema({
         ref: 'User'
     },
     dishes : [{
-        _id: {
+        dish: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: 'Dish'
+        },
+        quantity: {
+            type: Number,
+            default: 1
         }
     }]
 })
@@ -27,6 +31,9 @@ userTableSchema.methods.toJSON = function () {
     const userTableObject = userTable.toObject()
 
     // delete userTableObject.dishes
+    userTableObject.dishes.forEach(element => {
+        delete element._id
+    });
 
     return userTableObject
 }

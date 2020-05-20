@@ -30,7 +30,7 @@ const dishSchema = new mongoose.Schema({
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category.child'
+        ref: 'ChildCate'
     },
     tastes: [{
         taste: {
@@ -72,6 +72,12 @@ const dishSchema = new mongoose.Schema({
     }
 },{
     timestamps: true
+})
+
+dishSchema.virtual('test', {
+    ref: 'Category',
+    localField: 'category',
+    foreignField: 'child'
 })
 
 //Lọc dữ liệu trước khi trả client

@@ -23,8 +23,8 @@ router.get('/dishes/:id', async (req, res) => {
         }
 
         await dish.populate('category').execPopulate()
-        await dish.populate('ingredients.ingredient').execPopulate()
-        await dish.populate('tastes.taste').execPopulate()
+        // await dish.populate('ingredients.ingredient').execPopulate()
+        // await dish.populate('tastes.taste').execPopulate()
 
         res.send(dish)
     }catch (e) {
@@ -130,12 +130,15 @@ router.patch('/dishes/:id/updatecategory', auth, requireadmin, async (req, res) 
         }
 
         //kiểm tra category có tồn tại hay không
-        const category = await Category.findById(req.body.category)
+        const category = await Category.findOne({'child._id' : req.body.category})
+        
+        console.log(category)
+
         if(!category) {
-            throw new Error('Category cannot be found')
+            throw new Error('Category info cannot be found')
         }
 
-        dish.category = category._id
+        dish.category = req.body.category
         await dish.save()
 
         res.send({status: 'Updated'})

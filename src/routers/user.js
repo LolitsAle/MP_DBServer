@@ -5,6 +5,7 @@ const sharp = require('sharp')
 
 const User = require('../models/user')
 const userTable = require('../models/usertable')
+const Dish = require('../models/dish')
 const auth = require('./../middleware/auth')
 const requireadmin = require('../middleware/requireadmin')
 
@@ -83,8 +84,9 @@ router.post('/users/signup', async (req, res) => {
 //route truy cập giỏ hàng của người dùng
 router.get('/users/table/me', auth, async (req, res) => {
     try{
-        await req.user.populate('tables').execPopulate()
+        await req.user.populate('tables').populate('dishes.dish').execPopulate()
 
+        //await req.user.tables.populate('dishes.dish').execPopulate()
         //remove products
         res.send(req.user.tables)
 
@@ -343,6 +345,50 @@ router.post('/users/password/changepassword', async (req, res) => {
     }catch (e) {
         res.status(400).send({error: e.message})
     }
+})
+
+//thêm sản phẩm vào bàn ăn
+//reqdata : {dish : id, table: id }
+router.post('/users/table/me/adddish', auth, async (req, res) => {
+    try{
+        //kiểm tra dữ liệu đầu vào
+        const dish = Dish.findById(req.body.dish)
+        if(!dish) {
+            throw new Error('Dish cannot be found!')
+        }
+
+        const table = await userTable.findOne({
+            userid : req.user._id, 
+           // _id : req.body.table
+        })
+
+        if(!table) {
+            throw new Error('Table cannot be found!')
+        }
+
+        //kiểm tra xem trong table có sản phẩm đó hay chưa? => nếu có r thì + thêm 1
+        var status = false
+        await table.dishes.forEach(item => {
+            if(item.dish == req.body.dish) {
+                item.quantity += 1
+                status = true
+            }
+        })
+        if(status == false){
+            //tiến hành thêm dữ liệu
+            table.dishes = table.dishes.concat({dish : req.body.dish })
+
+        }
+        await table.save()
+        res.send({status: 'Saved1'})
+    }catch (e) {
+        res.status(400).send({error : e.message})
+    }
+})
+
+//api sửa bàn ăn cửa người dùng
+router.patch('/users/table/me', auth, (req,res) => {
+    
 })
 //cấp quyền admin bằng secretkey
 module.exports = router

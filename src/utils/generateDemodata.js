@@ -68,10 +68,15 @@ const generateDemoData = async function() {
     await taste3.save()
 
     //danh mục
-    // const category1 = new Category({
-    //     "name": "vegetarian",
-	//     "description": "best choice for vegetarian and ppl on diet"
-    // })
+    const category1 = new Category({
+        "name": "Breakfast",
+	    "child": [{
+            "name": "Noodles & Pho",
+            "description": "Traditional food in VietName, good choice to start your day"
+        },{
+            "name": "Bread and other friends"
+        }]
+    })
     // const category2 = new Category({
     //     "name": "desert",
 	//     "description": "appetizer food"
@@ -85,7 +90,7 @@ const generateDemoData = async function() {
 	//     "description": "well... those food are dried up"
     // })
 
-    // await category1.save()
+    await category1.save()
     // await category2.save()
     // await category3.save()
     // await category4.save()
