@@ -23,8 +23,8 @@ router.get('/dishes/:id', async (req, res) => {
         }
 
         await dish.populate('category').execPopulate()
-        // await dish.populate('ingredients.ingredient').execPopulate()
-        // await dish.populate('tastes.taste').execPopulate()
+        await dish.populate('ingredients.ingredient').execPopulate()
+        await dish.populate('tastes.taste').execPopulate()
 
         res.send(dish)
     }catch (e) {
@@ -106,7 +106,7 @@ router.patch('/dishes/:id', auth, requireadmin, async (req, res) => {
 //xóa sản phẩm
 router.delete('/dishes/:id', auth, requireadmin, async (req, res) => {
     try {
-        const dish = Dish.findById(req.params.id)
+        const dish = await Dish.findById(req.params.id)
 
         if(!dish) {
             throw new Error('Dish cannot be found')
@@ -130,7 +130,7 @@ router.patch('/dishes/:id/updatecategory', auth, requireadmin, async (req, res) 
         }
 
         //kiểm tra category có tồn tại hay không
-        const category = await Category.findOne({'child._id' : req.body.category})
+        const category = await Category.findById(req.body.category)
         
         console.log(category)
 
@@ -142,7 +142,6 @@ router.patch('/dishes/:id/updatecategory', auth, requireadmin, async (req, res) 
         await dish.save()
 
         res.send({status: 'Updated'})
-
     }catch (e) {
         res.status(400).send({error : e.message})
     }

@@ -89,11 +89,11 @@ userSchema.virtual('tables', {
 //Unique validation message change
 userSchema.post('save', function(error, doc, next) {
     if (error.name === 'MongoError' && error.code === 11000) {
-      next(new Error('email must be unique'));
+      next(new Error('email must be unique'))
     } else {
-      next();
+      next()
     }
-});
+})
 
 userSchema.methods.consolelog = async function() {
     console.log(this)

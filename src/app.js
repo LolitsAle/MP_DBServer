@@ -5,6 +5,7 @@ require('./database/mongodb')
 const userRouter = require('./routers/user')
 const dishRouter = require('./routers/dish')
 const adminRouter = require('./routers/admin')
+const cateRouter = require('./routers/category')
 
 const generatedemodata = require('./utils/generateDemodata')
 
@@ -15,6 +16,7 @@ app.use(bodyparser.urlencoded({extended: true}))
 app.use(userRouter)
 app.use(dishRouter)
 app.use(adminRouter)
+app.use(cateRouter)
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -38,6 +40,22 @@ app.post('/generatedemodata', (req, res) => {
     }catch (e) {
         res.status(400).send({error : e.message})
     }
+})
+
+app.get('*', (req, res) => {
+    res.status(404).send({error : 'Your request was cancelled by Server!'})
+})
+app.post('*', (req, res) => {
+    res.status(404).send({error : 'Your request was cancelled by Server!'})
+})
+app.put('*', (req, res) => {
+    res.status(404).send({error : 'Your request was cancelled by Server!'})
+})
+app.patch('*', (req, res) => {
+    res.status(404).send({error : 'Your request was cancelled by Server!'})
+})
+app.delete('*', (req, res) => {
+    res.status(404).send({error : 'Your request was cancelled by Server!'})
 })
 
 app.listen(port,() => {

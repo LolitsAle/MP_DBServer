@@ -5,92 +5,11 @@ const Dish = require('../models/dish')
 const Category = require('../models/category')
 const Ingredient = require('../models/ingredient')
 const Taste = require('../models/taste')
+const CategoryGroup = require('../models/categorygroup')
 
 const auth = require('./../middleware/auth') 
 const requireadmin = require('../middleware/requireadmin')
 const { inactiveEmail, invalidRequest } = require('../utils/getErrMessage')
-
-//=================================Category=========================================
-//lay thong tin category theo id
-router.get('/category/:id', async (req, res) => {
-    try{
-        const category = await Category.findById(req.params.id)
-
-        if(!Category) {
-            throw new Error('Category cannot be found')
-        }
-
-        res.send(Category)
-    }catch (e) {
-        res.status(400).send({error : e.message})
-    }
-    
-})
-//lay toàn bo danh sach category
-router.get('/category', async (req, res) => {
-    try{
-        const categories = await Category.find({})
-
-        res.send(categories)
-    }catch (e) {
-        res.status(400).send({error : e.message})
-    }
-})
-//them category moi
-router.post('/category', auth, requireadmin, async (req, res) => {
-    const category = new Category(req.body)
-
-    try{
-        await category.save()
-        
-        res.send({Status: 'OK'})
-    }catch (e) {
-        res.status(400).send({error : e.message})
-    }
-})
-//cập nhật 1 category
-router.patch('/category/:id', auth, requireadmin, async (req, res) => {
-    const request = Object.keys(req.body)
-    const validRequest = ["name","description"] //mảng chứa các phẩn tử cho phép
-    const isRequestValid = request.every((item) => {
-        if(validRequest.includes(item)) return true
-    })
-
-    if(!isRequestValid) {
-        return res.status(400).send(invalidRequest)
-    }
-
-    try{
-        const category = Category.findById(req.params.id)
-
-        if(!category) {
-            throw new Error('Category cannot be found')
-        }
-
-        request.forEach((item) => category[item] = req.body[item])
-        await category.save()
-        
-        res.send({Status: 'Updated'})
-    }catch (e) {
-        res.status(400).send({error : e.message})
-    }
-})
-//xóa 1 Category
-router.delete('/category/:id', auth, requireadmin, async (req, res) => {
-    try {
-        const category = await Category.findById(req.params.id)
-
-        if(!category) {
-            throw new Error('Category cannot be found')
-        }
-
-        await category.remove()
-
-        res.send({Status : 'Removed'})
-    }catch (e) {
-        res.status(400).send()
-    }
-})
 
 //=================================Taste=========================================
 //lay thong tin taste theo id
