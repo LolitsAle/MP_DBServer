@@ -24,8 +24,13 @@ CategoryGroupSchema.methods.toJSON = function () {
         const categroup = this
         const categroupObject = categroup.toObject()
 
+        categroupObject.categories.forEach(element => {
+            delete element._id
+        });
+
         return categroupObject
     }
+
 //xóa các category con bên collection Category
 CategoryGroupSchema.pre('remove', async function(next) {
     const categorygroup = this

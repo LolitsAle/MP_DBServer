@@ -3,8 +3,27 @@ const Category = require('../models/category')
 const Dish = require('../models/dish')
 const Ingredient = require('../models/ingredient')
 const Taste = require('../models/taste')
+const CategoryGroup = require('../models/categorygroup')
+
+const fs = require('fs')
+const sharp = require('sharp')
 
 const generateDemoData = async function() {
+    //lấy ảnh mẫu từ thư mục
+    const avatarimages = fs.readFileSync('./src/demo/user_avatar.png', async (err, data) => {
+        if(err) throw err
+        const buffer = await sharp(data).resize({width: 250, height: 250}).png().toBuffer()
+
+        return buffer
+    })
+
+    const dishimages = fs.readFileSync('./src/demo/dish_mainpicture.png', async (err, data) => {
+        if(err) throw err
+        const buffer = await sharp(data).resize({width: 250, height: 250}).png().toBuffer()
+
+        return buffer
+    })
+
     const user1 = new User({
         "isactive" : true,
         "age" : 21,
@@ -15,7 +34,8 @@ const generateDemoData = async function() {
         "tokens" : [],
         "gender" : "male",
         "address" : "2279/131/1 Huỳnh Tấn Phát Nhà bè TPHCM",
-        "password" : "caiconcax"
+        "password" : "caiconcax",
+        "avatar" : avatarimages
     })
     const user2 = new User({
         "isactive" : true,
@@ -27,7 +47,8 @@ const generateDemoData = async function() {
         "tokens" : [],
         "gender" : "male",
         "address" : "2279/131/1 Huỳnh Tấn Phát Nhà bè TPHCM",
-        "password" : "caiconcax"
+        "password" : "caiconcax",
+        "avatar": avatarimages
     })
     await user1.save()
     await user2.save()
@@ -47,9 +68,16 @@ const generateDemoData = async function() {
         "source" : "Pig's Heaven Farm",
         "name" : "flesh bacon"
     })
+    const ingredient4 = new Ingredient({
+        "description" : "eggs from industry chickens",
+        "source" : "Nature Farm",
+        "name" : "Chicken Eggs"
+    })
+
     await ingredient1.save()
     await ingredient2.save()
-    await ingredient2.save()
+    await ingredient3.save()
+    await ingredient4.save()
 
     const taste1 = new Taste({
         "description" : "Cay vl muốn ăn k ?",
@@ -67,63 +95,103 @@ const generateDemoData = async function() {
     await taste2.save()
     await taste3.save()
 
-    //danh mục
-    // const category1 = new Category({
-    //     "name": "Breakfast",
-	//     "child": [{
-    //         "name": "Noodles & Pho",
-    //         "description": "Traditional food in VietName, good choice to start your day"
-    //     },{
-    //         "name": "Bread and other friends"
-    //     }]
-    // })
-    // const category2 = new Category({
-    //     "name": "desert",
-	//     "description": "appetizer food"
-    // })
-    // const category3 = new Category({
-    //     "name": "drinks",
-	//     "description": "drinks helps your food much tastier, or makes your digest much easier"
-    // })
-    // const category4 = new Category({
-    //     "name": "dried food",
-	//     "description": "well... those food are dried up"
-    // })
 
-    // await category1.save()
-    // await category2.save()
-    // await category3.save()
-    // await category4.save()
+    //danh mục
+    const category1 = new Category({
+        "name": "Breads & sandwich",
+	    "description": "breads just breads"
+    })
+    const category2 = new Category({
+        "name": "VietName Noodles & Rice",
+	    "description": "VietNam's tradition noodles, you'll love it when it come to your first meal of the day"
+    })
+    const category3 = new Category({
+        "name": "Energy Drinks",
+	    "description": "POWERRRR!!!!"
+    })
+    const category4 = new Category({
+        "name": "Nature Drinks",
+	    "description": "Want a healthy drink? choose one!"
+    })
+    const category5 = new Category({
+        "name": "SeaFood MealBox",
+	    "description": "Is seafood is your favorite? GREAT!!! you can have a box filled with seafood right now!!!"
+    })
+    
+    const categorygroup1 = new CategoryGroup({
+        "name": "Breakfast",
+        "categories" : [{
+            "category" : category1._id
+        },{
+            "category" : category2._id
+        },{
+            "category" : category5._id
+        }]
+    })
+    const categorygroup2 = new CategoryGroup({
+        "name": "Drinks",
+        "categories" : [{
+            "category" : category3._id
+        },{
+            "category" : category4._id
+        }]
+    })
+
+    await category1.save()
+    await category2.save()
+    await category3.save()
+    await category4.save()
+    await category5.save()
+    await categorygroup1.save()
+    await categorygroup2.save()
+
     //tạo 20 sản phẩm
     const dish1 = new Dish({
         "name": "Fried Rice",
         "description": "Cơm bỏ lên chảo rồi chiên :)",
         "price": 5,
         "promotionprice": 4.5,
-        "kcal": 100
+        "kcal": 100,
+        "category": category2._id,
+        "mainpicture" : dishimages
+
     })
     const dish2 = new Dish({
         "name": "Muffer",
         "description": "Thịt băm nhồi trứng, và được chiên lên",
         "price": 10,
         "promotionprice": 9,
-        "kcal": 100
+        "kcal": 100,
+        "category": category2._id,
+        "mainpicture" : dishimages
     })
     const dish3 = new Dish({
         "name": "pudding",
         "description": "a gel-like appetizer food",
         "price": 10,
         "promotionprice": 9,
-        "kcal": 100
+        "kcal": 100,
+        "category": category2._id,
+        "mainpicture" : dishimages
     })
     const dish4 = new Dish({
         "name": "cocacola",
         "description": "nice drink that drives out your thirsty",
         "price": 1,
         "promotionprice": 0,
-        "kcal": 100
+        "kcal": 100,
+        "category": category2._id,
+        "mainpicture" : dishimages
     })
-    // const dish5 = new Dish({})
+    const dish5 = new Dish({ 
+        "name": "pepsi",
+        "description": "Tung chim teo",
+        "price": 10,
+        "promotionprice": 9,
+        "kcal": 100,
+        "category": category2._id,
+        "mainpicture" : dishimages
+    })
     // const dish6 = new Dish({})
     // const dish7 = new Dish({})
     // const dish8 = new Dish({})
@@ -144,7 +212,7 @@ const generateDemoData = async function() {
     await dish2.save()
     await dish3.save()
     await dish4.save()
-    // await dish5.save()
+    await dish5.save()
     // await dish6.save()
     // await dish7.save()
     // await dish8.save()

@@ -30,7 +30,6 @@ router.get('/dishes/:id', async (req, res) => {
     }catch (e) {
         res.status(400).send({error : e.message})
     }
-    
 })
 
 //tra cứu món ăn |bắt đầu bằng lấy toàn bộ món ăn|
@@ -131,8 +130,6 @@ router.patch('/dishes/:id/updatecategory', auth, requireadmin, async (req, res) 
 
         //kiểm tra category có tồn tại hay không
         const category = await Category.findById(req.body.category)
-        
-        console.log(category)
 
         if(!category) {
             throw new Error('Category info cannot be found')
@@ -156,12 +153,18 @@ router.patch('/dishes/:id/updateingredients', auth, requireadmin, async (req, re
             throw new Error('Dish cannot be found')
         }
 
-        req.body.ingredients.forEach(async element => {
-            const ingredient = await Ingredient.findById(element)
-            if(!ingredient) {
-                throw new Error ('Cannot find ingredient')
-            }
-        })
+        //throw error after loop
+            req.body.ingredients.forEach(async element => {
+                try {
+                    const ingredient = await Ingredient.findById(element)
+                    if(!ingredient) {
+                        throw new Error('Cannot find ingredient with id: ' + element)
+                    }
+                } catch (error) {
+                    res.status(400).send({error: error.message})
+                } 
+            })
+    
         //clean the ingredients
         dish.ingredients = []
         
@@ -187,11 +190,16 @@ router.patch('/dishes/:id/updatetastes', auth, requireadmin, async (req, res) =>
         }
 
         req.body.tastes.forEach(async element => {
-            const taste = await Taste.findById(element)
-            if(!taste) {
-                throw new Error ('Cannot find taste')
+            try {
+                const taste = await Taste.findById(element)
+                if(!taste) {
+                    throw new Error ('Cannot find taste with id:' + element)
+                }
+            } catch (error) {
+                res.status(400).send({error: error.message})
             }
         })
+        
         //clean the ingredients
         dish.tastes = []
         

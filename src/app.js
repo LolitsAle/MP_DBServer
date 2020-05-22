@@ -73,9 +73,32 @@ app.listen(port,() => {
 //     // const tuser = await user.findById('5eb68a360c711803f4a5ab41')
 //     // await tuser.populate('tables').execPopulate()
 //     // console.log(tuser.tables)
-    
+
 // }
+
 // testfunction()
+
 //===============TEST GROUND===================
+// const fs = require('fs')
+// const sharp = require('sharp')
+// const User = require('./models/user')
+
+// const testfunction = async function () {
+//     const images = fs.readFileSync('./src/demo/user_avatar.png', async (err, data) => {
+//         if(err) throw err
+//         const buffer = await sharp(data).resize({width: 250, height: 250}).png().toBuffer()
+
+//         const user = await User.findById("5ec7d7fc8d06c82f80e2fe9f")
+
+//         user.avatar = buffer
+//         await user.save()
+
+//         return buffer
+//     })
+
+//     console.log(images)
+// }
+
+// testfunction()
 
 

@@ -171,7 +171,7 @@ router.delete('/ingredient/:id', auth, requireadmin, async (req, res) => {
 
         res.send({Status : 'Removed'})
     }catch (e) {
-        res.status(400).send()
+        res.status(400).send({error : e.message})
     }
 })
 
