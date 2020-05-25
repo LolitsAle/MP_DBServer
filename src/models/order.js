@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const OrderSchema = new mongoose.Schema({
+},{
+    timestamps: true
 })
 
 const Order = mongoose.model('Order', OrderSchema)
