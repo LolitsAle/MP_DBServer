@@ -12,6 +12,10 @@ const userTableSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    totalprice: {
+        type: Number,
+        default: 0
+    },
     dishes : [{
         dish: {
             type: mongoose.Schema.Types.ObjectId,

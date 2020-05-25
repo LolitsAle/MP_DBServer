@@ -81,20 +81,6 @@ router.post('/users/signup', async (req, res) => {
     }
 })
 
-//route truy cập giỏ hàng của người dùng
-router.get('/users/table/me', auth, async (req, res) => {
-    try{
-        await req.user.populate('tables').populate('dishes.dish').execPopulate()
-
-        //await req.user.tables.populate('dishes.dish').execPopulate()
-        //remove products
-        res.send(req.user.tables)
-
-    }catch(e) {
-        res.status(400).send({error : e.message})
-    }
-})
-
 //upload ảnh đại diện
 const avatar = multer({
     limits: {
@@ -347,6 +333,38 @@ router.post('/users/password/changepassword', async (req, res) => {
     }
 })
 
+//route truy cập giỏ hàng của người dùng
+router.get('/users/table/me', auth, async (req, res) => {
+    try{
+        await req.user.populate({
+            path: 'tables',
+            populate: {
+                path : 'dishes.dish'
+            }
+        }).execPopulate().then(function(data) {
+            console.log(data.tables)
+        }).catch()
+
+
+        
+        //tính toán giá của các sản phẩm trong giỏ hàng và đưa vào totalprice
+        // req.user.tables.dishes.forEach(element => {
+        //     req.user.tables.totalpice += (element.dish.promotionprice * element.quantity)
+        // })
+
+        //await req.user.tables.populate('dishes.dish').execPopulate()
+        //remove products
+        
+        // console.log(req.user.tables);
+        
+        res.send(req.user.tables)
+
+    }catch(e) {
+        res.status(400).send({error : e.message})
+    }
+})
+
+
 //thêm sản phẩm vào bàn ăn
 //reqdata : {dish : id, table: id }
 router.post('/users/table/me/adddish', auth, async (req, res) => {
@@ -377,10 +395,16 @@ router.post('/users/table/me/adddish', auth, async (req, res) => {
         if(status == false){
             //tiến hành thêm dữ liệu
             table.dishes = table.dishes.concat({dish : req.body.dish })
-
         }
-        await table.save()
-        res.send({status: 'Saved1'})
+
+        //hàm cập nhật totalprice
+        table.totalprice = 0
+        await table.dishes.forEach(async item => {
+            const pdish = await Dish.findById(item.dish)
+            table.totalprice += (pdish.promotionprice * item.quantity)
+            await table.save()
+        })
+        res.send({status: 'Saved'})
     }catch (e) {
         res.status(400).send({error : e.message})
     }

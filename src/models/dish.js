@@ -108,7 +108,7 @@ dishSchema.post('save', function(error, doc, next) {
 dishSchema.pre('save', function(next) {
     const dish = this
 
-    if(dish.promotionprice >= dish.price){
+    if(dish.promotionprice > dish.price){
         throw new Error('Promotion price must be lower than price')
     }
     
