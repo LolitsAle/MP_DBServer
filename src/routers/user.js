@@ -30,7 +30,33 @@ router.post('/users/login', async (req, res) => {
 
         const token = await user.generateAuthToken()
 
-        res.send({Status: 'OK' ,token})
+        //lọc dữ liệu
+        const data = user.toObject()
+        
+        delete data.age
+        delete data.isactive
+        delete data.gender
+        delete data._id
+        delete data.email
+        delete data.address
+
+        delete data.password
+        delete data.tokens
+        delete data._id
+        
+        delete data.isactive
+        delete data.activationcode
+        
+        delete data.passwordrecovercode
+        delete data.recoveringtoken
+
+        delete data.createdAt
+        delete data.updatedAt
+
+        delete data.__v
+        
+
+        res.send({Status: 'OK' ,token , data})
     }catch (e){
         res.status(401).send({error : e.message})
     }
