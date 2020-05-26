@@ -367,21 +367,7 @@ router.get('/users/table/me', auth, async (req, res) => {
             populate: {
                 path : 'dishes.dish'
             }
-        }).execPopulate().then(function(data) {
-            console.log(data.tables)
-        }).catch()
-
-
-        
-        //tính toán giá của các sản phẩm trong giỏ hàng và đưa vào totalprice
-        // req.user.tables.dishes.forEach(element => {
-        //     req.user.tables.totalpice += (element.dish.promotionprice * element.quantity)
-        // })
-
-        //await req.user.tables.populate('dishes.dish').execPopulate()
-        //remove products
-        
-        // console.log(req.user.tables);
+        }).execPopulate()
         
         res.send(req.user.tables)
 
@@ -423,13 +409,8 @@ router.post('/users/table/me/adddish', auth, async (req, res) => {
             table.dishes = table.dishes.concat({dish : req.body.dish })
         }
 
-        //hàm cập nhật totalprice
-        table.totalprice = 0
-        await table.dishes.forEach(async item => {
-            const pdish = await Dish.findById(item.dish)
-            table.totalprice += (pdish.promotionprice * item.quantity)
-            await table.save()
-        })
+        await table.save()
+
         res.send({status: 'Saved'})
     }catch (e) {
         res.status(400).send({error : e.message})

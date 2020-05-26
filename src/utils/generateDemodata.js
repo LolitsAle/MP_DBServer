@@ -4,6 +4,7 @@ const Dish = require('../models/dish')
 const Ingredient = require('../models/ingredient')
 const Taste = require('../models/taste')
 const CategoryGroup = require('../models/categorygroup')
+const UserTable = require('../models/usertable')
 
 const fs = require('fs')
 const sharp = require('sharp')
@@ -400,6 +401,19 @@ const generateDemoData = async function() {
     // await dish18.save()
     // await dish19.save()
     // await dish20.save()
+
+    const usertable = new UserTable({
+        "name": "My first table",
+        "userid": user1._id,
+        "dishes": [{
+            "dish" : dish1._id,
+            "quantity": 2
+        },{
+            "dish" : dish2._id,
+            "quantity": 1
+        }],
+        "__v": 0
+    })
 }
 
 module.exports = generateDemoData
