@@ -98,12 +98,12 @@ const generateDemoData = async function() {
 
     //danh mục
     const category1 = new Category({
-        "name": "Breads & sandwich",
-	    "description": "breads just breads"
+        "name": "Standard Breakfast",
+	    "description": "fk u"
     })
     const category2 = new Category({
-        "name": "VietName Noodles & Rice",
-	    "description": "VietNam's tradition noodles, you'll love it when it come to your first meal of the day"
+        "name": "Desert",
+	    "description": "Desert is desert"
     })
     const category3 = new Category({
         "name": "Energy Drinks",
@@ -151,73 +151,245 @@ const generateDemoData = async function() {
         "description": "Cơm bỏ lên chảo rồi chiên :)",
         "price": 5,
         "promotionprice": 4.5,
-        "kcal": 100,
+        "kcal": 200,
         "category": category2._id,
-        "mainpicture" : dishimages
+        "mainpicture" : dishimages,
+        "ingredients": [{
+            "ingredient": ingredient1._id
+        },{
+            "ingredient": ingredient2._id
+        }]
 
     })
     const dish2 = new Dish({
         "name": "Muffer",
         "description": "Thịt băm nhồi trứng, và được chiên lên",
-        "price": 10,
-        "promotionprice": 9,
+        "price": 5,
+        "promotionprice": 5,
         "kcal": 100,
         "category": category2._id,
-        "mainpicture" : dishimages
+        "mainpicture" : dishimages,
+        "ingredients": [{
+            "ingredient": ingredient3._id
+        },{
+            "ingredient": ingredient2._id
+        }]
+
     })
     const dish3 = new Dish({
         "name": "pudding",
         "description": "a gel-like appetizer food",
-        "price": 10,
-        "promotionprice": 9,
-        "kcal": 100,
+        "price": 0.5,
+        "promotionprice": 0.5,
+        "kcal": 20,
         "category": category2._id,
-        "mainpicture" : dishimages
+        "mainpicture" : dishimages,
+        "ingredients": [{
+            "ingredient": ingredient4._id
+        },{
+            "ingredient": ingredient3._id
+        }]
+
     })
     const dish4 = new Dish({
         "name": "cocacola",
         "description": "nice drink that drives out your thirsty",
         "price": 1,
-        "promotionprice": 0,
-        "kcal": 100,
-        "category": category2._id,
+        "promotionprice": 0.8,
+        "kcal": 60,
+        "category": category3._id,
         "mainpicture" : dishimages
     })
     const dish5 = new Dish({ 
         "name": "pepsi",
-        "description": "Tung chim teo",
-        "price": 10,
-        "promotionprice": 9,
-        "kcal": 100,
-        "category": category2._id,
+        "description": "nice drink that drives out your thirsty",
+        "price": 1,
+        "promotionprice": 1,
+        "kcal": 50,
+        "category": category3._id,
         "mainpicture" : dishimages
     })
-    // const dish6 = new Dish({})
-    // const dish7 = new Dish({})
-    // const dish8 = new Dish({})
-    // const dish9 = new Dish({})
-    // const dish10 = new Dish({})
-    // const dish11 = new Dish({})
-    // const dish12 = new Dish({})
-    // const dish13 = new Dish({})
-    // const dish14 = new Dish({})
-    // const dish15 = new Dish({})
-    // const dish16 = new Dish({})
-    // const dish17 = new Dish({})
-    // const dish18 = new Dish({})
-    // const dish19 = new Dish({})
-    // const dish20 = new Dish({})
+    const dish6 = new Dish({
+        "name": "Mixed Rice MealBox",
+        "description": "mixed multiple types of rice togethere, make a wonderful taste and lively meals to your interests",
+        "price": 2,
+        "promotionprice": 1.5,
+        "kcal": 200,
+        "category": category1._id,
+        "mainpicture" : dishimages,
+        "ingredients": [{
+            "ingredient": ingredient1._id
+        }]
+
+    })
+    const dish7 = new Dish({
+        "name": "Standard Box for breakfast",
+        "description": "A simple, popular VietNamese taste mealbox, give you everything your body needs to maintain good health, especially it has wonderful-light taste",
+        "price": 2,
+        "promotionprice": 2,
+        "kcal": 200,
+        "category": category1._id,
+        "mainpicture" : dishimages,
+        "ingredients": [{
+            "ingredient": ingredient1._id
+        },{
+            "ingredient": ingredient2._id
+        },{
+            "ingredient": ingredient3._id
+        }]
+
+    })
+    const dish8 = new Dish({
+        "name": "Seafood Mealbox V1 - Light taste",
+        "description": "A box filled with seafood and rice, we make it light taste because you can taste the sweet of the seafood easier",
+        "price": 2.5,
+        "promotionprice": 2.4,
+        "kcal": 200,
+        "category": category5._id,
+        "mainpicture" : dishimages,
+        "ingredients": [{
+            "ingredient": ingredient1._id
+        },{
+            "ingredient": ingredient2._id
+        },{
+            "ingredient": ingredient3._id
+        }]
+    })
+    const dish9 = new Dish({
+        "name": "Seafood Mealbox V2 - Spicy",
+        "description": "A box filled with seafood and rice, spicy can make seafood much tastier. But if ou dont want it to be too spicy, leave a note for us so we can make it to your taste",
+        "price": 2.5,
+        "promotionprice": 2.3,
+        "kcal": 300,
+        "category": category5._id,
+        "mainpicture" : dishimages,
+        "ingredients": [{
+            "ingredient": ingredient1._id
+        },{
+            "ingredient": ingredient4._id
+        },{
+            "ingredient": ingredient3._id
+        }]
+    })
+    const dish10 = new Dish({
+        "name": "Crap Mealbox - soy sauce",
+        "description": "We mix your rice with crap meat and some vegetables, it much tastier if you pour our soy sauce on the rice and mix them up.",
+        "price": 2,
+        "promotionprice": 2,
+        "kcal": 500,
+        "category": category5._id,
+        "mainpicture" : dishimages,
+        "ingredients": [{
+            "ingredient": ingredient1._id
+        },{
+            "ingredient": ingredient2._id
+        },{
+            "ingredient": ingredient3._id
+        },{
+            "ingredient": ingredient4._id
+        }]
+    })
+    // const dish11 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
+    // const dish12 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
+    // const dish13 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
+    // const dish14 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
+    // const dish15 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
+    // const dish16 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
+    // const dish17 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
+    // const dish18 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
+    // const dish19 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
+    // const dish20 = new Dish({
+    //     "name": "pepsi",
+    //     "description": "Tung chim teo",
+    //     "price": 10,
+    //     "promotionprice": 9,
+    //     "kcal": 100,
+    //     "category": category2._id,
+    //     "mainpicture" : dishimages
+    // })
 
     await dish1.save()
     await dish2.save()
     await dish3.save()
     await dish4.save()
     await dish5.save()
-    // await dish6.save()
-    // await dish7.save()
-    // await dish8.save()
-    // await dish9.save()
-    // await dish10.save()
+    await dish6.save()
+    await dish7.save()
+    await dish8.save()
+    await dish9.save()
+    await dish10.save()
     // await dish11.save()
     // await dish12.save()
     // await dish13.save()
