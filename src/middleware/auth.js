@@ -6,6 +6,7 @@ const { invalidSession, unAuthenticate } = require('../utils/getErrMessage')
 //Hàm kiểm tra tình trang đăng nhập
 const auth = async (req, res, next) => {
     try{
+        console.log(req)
         const token = req.header('Authorization').replace('Bearer ', '')
         //giải mã token, nếu token chưa hết hạn thì decode._id sẽ lưu _id của user
         const decoded = jwt.verify(token, TokenKeyString)

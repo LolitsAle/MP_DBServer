@@ -6,6 +6,7 @@ const userRouter = require('./routers/user')
 const dishRouter = require('./routers/dish')
 const adminRouter = require('./routers/admin')
 const cateRouter = require('./routers/category')
+const checkoutRouter = require('./routers/checkout')
 
 const generatedemodata = require('./utils/generateDemodata')
 
@@ -17,11 +18,12 @@ app.use(userRouter)
 app.use(dishRouter)
 app.use(adminRouter)
 app.use(cateRouter)
+app.use(checkoutRouter)
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Token" );
+    res.header("Access-Control-Allow-Headers", "*" );
     next();
   });
 

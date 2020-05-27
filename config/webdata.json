@@ -1,10 +1,12 @@
 {
     "ConnectionString" : "mongodb://127.0.0.1:27017/MealPrepping",
     "TokenKeyString" : "InitialKey",
-    "TokenExpiredAfter" : "30m",
+    "TokenExpiredAfter" : "1d",
     "RecoverTokenExpireAfter" : "10m",
     "hostMail" : "songas000@gmail.com",
     "hostName" : "Sơn đẹp trai",
     "mailPassword" : "sonlanguoisieudeptrai",
-    "mailService" : "gmail"
+    "mailService" : "gmail",
+    "paypalSanboxID": "AXj0eE0PzlXTfYp2HjUPJzU02EeTqhs_7zUtONa9XtPsjVUKP7fZkxDYDHmcdycBXA4-5y2f_OMNoamr",
+    "paypalSanboxSecret": "EOW-FmFJdxjKutHuewZj6iFmF76pwPT40VPLGXLDpHVoX6bMXhi96T7sYMox2hSOHyPdrNwHCFx8SQIy"
 }
