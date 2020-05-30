@@ -32,31 +32,8 @@ router.post('/users/login', async (req, res) => {
 
         //lọc dữ liệu
         const data = user.toObject()
-        
-        delete data.age
-        delete data.isactive
-        delete data.gender
-        delete data._id
-        delete data.email
-        delete data.address
-
-        delete data.password
-        delete data.tokens
-        delete data._id
-        
-        delete data.isactive
-        delete data.activationcode
-        
-        delete data.passwordrecovercode
-        delete data.recoveringtoken
-
-        delete data.createdAt
-        delete data.updatedAt
-
-        delete data.__v
-        
-
-        res.send({Status: 'OK' ,token , data})
+    
+        res.send({Status: 'OK' ,token , role: user.role, name: user.name, avatar: data.avatar})
     }catch (e){
         res.status(401).send({error : e.message})
     }
@@ -203,21 +180,6 @@ router.patch('/users/me', auth, async (req,res) => {
 })
 //sửa& xóa người dùng/ xóa luôn giỏ hàng của người dùng, yêu cầu quyền admin
 
-//tạo usertable mới
-router.post('/users/createnewtable', auth, async (req, res) => {
-    try{
-        const table = new userTable({
-            name: req.body.name,
-            userid: req.user._id
-        })
-    
-        await table.save()
-    
-        res.send({status: 'OK'})
-    }catch(e) {
-        res.status(400).send({error : e.message})
-    }
-})
 
 //gửi mail kích hoạt 
 //request -> { email : useremail }
@@ -359,6 +321,24 @@ router.post('/users/password/changepassword', async (req, res) => {
     }
 })
 
+
+//tạo usertable mới
+router.post('/users/createnewtable', auth, async (req, res) => {
+    try{
+        const table = new userTable({
+            name: req.body.name,
+            userid: req.user._id,
+            dishes: []
+        })
+    
+        await table.save()
+    
+        res.send({status: 'OK'})
+    }catch(e) {
+        res.status(400).send({error : e.message})
+    }
+})
+
 //route truy cập giỏ hàng của người dùng
 router.get('/users/table/me', auth, async (req, res) => {
     try{
@@ -368,7 +348,7 @@ router.get('/users/table/me', auth, async (req, res) => {
                 path : 'dishes.dish'
             }
         }).execPopulate()
-        
+
         res.send(req.user.tables)
 
     }catch(e) {
@@ -382,7 +362,7 @@ router.get('/users/table/me', auth, async (req, res) => {
 router.post('/users/table/me/adddish', auth, async (req, res) => {
     try{
         //kiểm tra dữ liệu đầu vào
-        const dish = Dish.findById(req.body.dish)
+        const dish = await Dish.findById(req.body.dish)
         if(!dish) {
             throw new Error('Dish cannot be found!')
         }
@@ -409,7 +389,7 @@ router.post('/users/table/me/adddish', auth, async (req, res) => {
             table.dishes = table.dishes.concat({dish : req.body.dish })
         }
 
-        await table.save()
+        await table.calculateTotalPrice()
 
         res.send({status: 'Saved'})
     }catch (e) {

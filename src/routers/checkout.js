@@ -9,11 +9,12 @@ const payPalClient = require('../utils/paypalClient')
 
 //hàm thanh toán (client gọi CreateOrder và gửi data bàn ăn lên)
 //server => lấy data usertable theo id và cập nhật vào data order
-router.post('/users/me/table/:tableid/checkout', async (req, res) => {
+router.post('/users/me/table/:tableid/checkout',auth, async (req, res) => {
     console.log('checkout running')
 
+    console.log('USER ID: ' + req.user._id)
     console.log('TABLE ID: '+ req.params.tableid)
-    
+
     // 2. Allow cross-domain
     res.setHeader('access-control-allow-origin', '*');
 

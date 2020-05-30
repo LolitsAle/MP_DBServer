@@ -28,16 +28,15 @@
               'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWNjMTQwN2YyMDk0MDI4MTQ1ZmZlNWQiLCJpYXQiOjE1OTA1NTkyNTQsImV4cCI6MTU5MDY0NTY1NH0.g-TADhaQ9GehjmbNjfHzUDFBCqNYrQ4x_osStMlQ8uI'
             }
         }).then(function(res) {
-          alert(res.status)
           return res.json()
         }).then(function(data) {
-          alert(data.orderID)
           return data.orderID
         })
         },
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(details) {
             alert('Transaction completed by ' + details.payer.name.given_name);
+            console.log(details)
           });
         },
       }).render('#paypal-button-container'); // Display payment options on your web page

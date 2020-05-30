@@ -43,29 +43,36 @@ userTableSchema.methods.toJSON = function () {
     return userTableObject
 }
 
-userTableSchema.pre('save', function(next) {
+userTableSchema.methods.calculateTotalPrice = function () {
     const table = this
 
-    //hàm cập nhật totalprice
     const code = new Promise((resolve, reject) => {
         var totalprice = 0
         var counter = 0
+
         table.dishes.forEach(async item => {
             const pdish = await Dish.findById(item.dish)
+            console.log(pdish);
 
             totalprice += (pdish.promotionprice * item.quantity)
             counter ++
 
             if(counter === table.dishes.length) {
                 table.totalprice = totalprice
+                console.log(table)
                 resolve()
             }
         })
     })
 
     code.then(()=> {
-        next()
+        console.log(table, {a : 2})
+        table.save()
     })
+}
+
+userTableSchema.pre('save', function(next) {
+    next()
 })
 
 const UserTable = mongoose.model('UserTable', userTableSchema)
