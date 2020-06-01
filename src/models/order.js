@@ -10,9 +10,15 @@ const OrderSchema = new mongoose.Schema({
     // các dạng status: 'Waiting for Phone Comfirm, Prepraring your order, Delivering..., Completed'
     status: {
         type: String,
-        default: 'Waiting for Phone Comfirm'
+        default: 'Waiting for Payment'
     },
     finalprice: {
+        type: Number
+    },
+    discountpercent: {
+        type: Number
+    },
+    discountnumber: {
         type: Number
     },
     user: {
@@ -20,20 +26,14 @@ const OrderSchema = new mongoose.Schema({
         ref: 'User'
     },
     items: [{
-        name: {
-            type: String,
-            default: 'Unknown'
+        dish: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Dish'
         },
         quantity: {
             type: Number,
             default: 1
-        },
-        price: {
-            type: Number
-        },
-        dish: {
-            type: mongoose.Schema.Types.ObjectId,
-
         }
     }],
     paymentmethod: {

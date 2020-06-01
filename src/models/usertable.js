@@ -52,14 +52,12 @@ userTableSchema.methods.calculateTotalPrice = function () {
 
         table.dishes.forEach(async item => {
             const pdish = await Dish.findById(item.dish)
-            console.log(pdish);
 
             totalprice += (pdish.promotionprice * item.quantity)
             counter ++
 
             if(counter === table.dishes.length) {
                 table.totalprice = totalprice
-                console.log(table)
                 resolve()
             }
         })

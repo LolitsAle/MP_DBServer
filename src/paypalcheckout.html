@@ -25,21 +25,31 @@
             method: 'post',
             headers: {
               'content-type': 'application/json',
-              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWQyYTQ0OTFkODIxYTI0ZDg5OWM2NmUiLCJpYXQiOjE1OTA5NTE5NTcsImV4cCI6MTU5MTAzODM1N30.Ok81zk-gjQrYbAdF5ah91BSIHr9qVN9vAQsNAf8hG4E'
+              'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWQ0Y2MwZTFmMTU5MTI5ZjQyNzA2ZDgiLCJpYXQiOjE1OTEwMDY4ODksImV4cCI6MTU5MTA5MzI4OX0.EEyqxFY4He8K4cjqjXf50XHUivXhX3mQZLut835mHgo'
             }
         }).then(function(res) {
           return res.json()
         }).then(function(data) {
           return data.orderID
+        }).catch(function(err) {
+          console.log(err)
         })
         },
-        onApprove: function(data, actions) {
-          return actions.order.capture().then(function(details) {
-            alert('Transaction completed by ' + details.payer.name.given_name);
-            console.log(details)
-          });
-        },
-      }).render('#paypal-button-container'); // Display payment options on your web page
+        onApprove: function(data) {
+          return fetch('http://localhost:4000/users/me/order/completepayment', {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+              orderID: data.orderID
+            })
+          }).then(function(res) {
+            return res.json();
+          }).then(function(details) {
+            alert('Your payment has been completed, your order id is:' + details.orderID);
+          })
+          },}).render('#paypal-button-container'); // Display payment options on your web page
 
       //default script
     //

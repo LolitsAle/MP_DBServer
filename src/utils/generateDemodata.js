@@ -35,7 +35,7 @@ const generateDemoData = async function() {
         "tokens" : [],
         "gender" : "male",
         "address" : "2279/131/1 Huỳnh Tấn Phát Nhà bè TPHCM",
-        "password" : "caiconcax",
+        "password" : "caidkmmlduy",
         "avatar" : avatarimages
     })
     const user2 = new User({
