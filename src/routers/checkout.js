@@ -162,4 +162,19 @@ router.post('/users/me/order/completepayment', async (req, res) => {
         });
     }
 })
+
+router.get('/users/me/orders', auth, async (req, res) => {
+    try {
+        await req.user.populate({
+            path: 'orders',
+            populate: {
+                path : 'items.dish'
+            }
+        }).execPopulate()
+
+        res.send(req.user.orders)
+    } catch (error) {
+        res.status(400).send({error : error.message})
+    }
+})
 module.exports = router

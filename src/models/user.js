@@ -86,6 +86,13 @@ userSchema.virtual('tables', {
     foreignField: 'userid'
 })
 
+userSchema.virtual('orders', {
+    ref: 'Order',
+    localField: '_id',
+    foreignField: 'user'
+})
+
+
 //Unique validation message change
 userSchema.post('save', function(error, doc, next) {
     if (error.name === 'MongoError' && error.code === 11000) {
