@@ -432,6 +432,12 @@ router.patch('/users/me/updatetable/:tableid', auth, async (req, res) => {
                 })
                 break
             }
+            case 'remove': {
+                //filter lại mảng trong table
+                table.dishes = await table.dishes.filter(item => item._id != req.query.id)
+                checker = true
+                break
+            }
             //task sai
             default: {
                 throw new Error('invalid request!')
