@@ -98,12 +98,12 @@ const avatar = multer({
 })
 
 router.post('/users/me/avatar', auth, avatar.single('avatar'), async (req, res) => {
-    const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
+    //const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
 
-    req.user.avatar = buffer
+    req.user.avatar = req.body.avatar;
     await req.user.save()
 
-    res.send()
+    res.send({ status: "OK", avatar: req.user.avatar.toString() });
 }, (error, req, res, next) => {
     res.status(400).send({error : error.message})
 })
@@ -398,7 +398,56 @@ router.post('/users/table/me/adddish', auth, async (req, res) => {
 })
 
 //api sửa bàn ăn cửa người dùng
-router.patch('/users/table/me', auth, (req,res) => {
+//thêm 1 quantity vào giỏ hàng params: id: id, task: increase/decrease
+router.patch('/users/me/updatetable/:tableid', auth, async (req, res) => {
+    try {
+        const table = await userTable.findOne({
+            userid : req.user._id, 
+           // _id : req.body.table
+        })
+        
+        if(!table) {
+            throw new Error('Could not find table')
+        }
+        
+        var checker = false;
+        switch (req.query.task){
+            case 'increase' :{
+                //tìm thuộc tính có id cung cấp
+                table.dishes.forEach(item => {
+                    if(item._id == req.query.id){
+                        item.quantity ++
+                        checker = true
+                    }
+                })
+                break
+            }
+            case 'decrease' :{
+                //tìm thuộc tính có id cung cấp
+                table.dishes.forEach(item => {
+                    if(item._id == req.query.id){
+                        item.quantity --
+                        checker = true
+                    }
+                })
+                break
+            }
+            //task sai
+            default: {
+                throw new Error('invalid request!')
+            }
+        }
+
+        if(checker == false) {
+            throw new Error('Cannot find dish')
+        }
+
+        await table.calculateTotalPrice()
+
+        res.send()
+    } catch (error) {
+        res.status(400).send({error: error.message})
+    }
     
 })
 //cấp quyền admin bằng secretkey

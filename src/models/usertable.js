@@ -36,9 +36,9 @@ userTableSchema.methods.toJSON = function () {
     const userTableObject = userTable.toObject()
 
     // delete userTableObject.dishes
-    userTableObject.dishes.forEach(element => {
-        delete element._id
-    });
+    // userTableObject.dishes.forEach(element => {
+    //     delete element._id
+    // });
 
     return userTableObject
 }
@@ -64,7 +64,6 @@ userTableSchema.methods.calculateTotalPrice = function () {
     })
 
     code.then(()=> {
-        console.log(table, {a : 2})
         table.save()
     })
 }
