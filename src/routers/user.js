@@ -389,7 +389,7 @@ router.post('/users/table/me/adddish', auth, async (req, res) => {
             table.dishes = table.dishes.concat({dish : req.body.dish })
         }
 
-        await table.calculateTotalPrice()
+        await table.save()
 
         res.send({status: 'Saved'})
     }catch (e) {
@@ -399,7 +399,7 @@ router.post('/users/table/me/adddish', auth, async (req, res) => {
 
 //api sửa bàn ăn cửa người dùng
 //thêm 1 quantity vào giỏ hàng params: id: id, task: increase/decrease
-router.patch('/users/me/updatetable/:tableid', auth, async (req, res) => {
+router.put('/users/me/updatetable/:tableid', auth, async (req, res) => {
     try {
         const table = await userTable.findOne({
             userid : req.user._id, 
@@ -411,12 +411,14 @@ router.patch('/users/me/updatetable/:tableid', auth, async (req, res) => {
         }
         
         var checker = false;
+        var quantity = 0
         switch (req.query.task){
             case 'increase' :{
                 //tìm thuộc tính có id cung cấp
                 table.dishes.forEach(item => {
                     if(item._id == req.query.id){
                         item.quantity ++
+                        quantity = item.quantity
                         checker = true
                     }
                 })
@@ -427,6 +429,7 @@ router.patch('/users/me/updatetable/:tableid', auth, async (req, res) => {
                 table.dishes.forEach(item => {
                     if(item._id == req.query.id){
                         item.quantity --
+                        quantity = item.quantity
                         checker = true
                     }
                 })
@@ -448,9 +451,10 @@ router.patch('/users/me/updatetable/:tableid', auth, async (req, res) => {
             throw new Error('Cannot find dish')
         }
 
-        await table.calculateTotalPrice()
+        await table.save()
+        console.log(table)
 
-        res.send()
+        res.send({totalprice : table.totalprice, quantity: quantity})
     } catch (error) {
         res.status(400).send({error: error.message})
     }

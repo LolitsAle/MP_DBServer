@@ -44,6 +44,10 @@ userTableSchema.methods.toJSON = function () {
 }
 
 userTableSchema.methods.calculateTotalPrice = function () {
+    
+}
+
+userTableSchema.pre('save', function(next) {
     const table = this
 
     const code = new Promise((resolve, reject) => {
@@ -63,13 +67,9 @@ userTableSchema.methods.calculateTotalPrice = function () {
         })
     })
 
-    code.then(()=> {
-        table.save()
+    code.then(async ()=> {
+        next()
     })
-}
-
-userTableSchema.pre('save', function(next) {
-    next()
 })
 
 const UserTable = mongoose.model('UserTable', userTableSchema)
