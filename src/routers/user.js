@@ -438,7 +438,7 @@ router.patch('/users/me/updatetable/:tableid', auth, async (req, res) => {
                 checker = true
                 break
             }
-            //task sai
+            //task sais
             default: {
                 throw new Error('invalid request!')
             }
