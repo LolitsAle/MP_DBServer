@@ -99,7 +99,7 @@ router.patch('/category/:id',auth, requireadmin, async (req, res) => {
 
     try{
         const category = await Category.findById(req.params.id)
-        if(!categorygroup) {
+        if(!category) {
             throw new Error('Cannot find category')
         }
         request.forEach((item) => category[item] = category[item])

@@ -6,6 +6,8 @@ const Taste = require('../models/taste')
 const CategoryGroup = require('../models/categorygroup')
 const UserTable = require('../models/usertable')
 
+const path = require('path')
+
 const fs = require('fs')
 const sharp = require('sharp')
 
@@ -17,38 +19,47 @@ const generateDemoData = async function() {
 
         return buffer
     })
+    
+    //dễ thôi chỉnh cái này 1 tí à
 
-    const dishimages = fs.readFileSync('./src/demo/dish_mainpicture.png', async (err, data) => {
-        if(err) throw err
-        const buffer = await sharp(data).resize({width: 250, height: 250}).png().toBuffer()
+    const getimages = function(filepath) {
+        const filepath2 = path.join(__dirname, '../', 'demo/', filepath)
+        const filedata = fs.readFileSync(filepath2, async (err, data) => {
+            console.log(data);
+            if(err) throw err
+            const buffer = await sharp(data).resize({width: 250, height: 250}).png().toBuffer()
+            
+            return buffer
+        })
 
-        return buffer
-    })
+        return filedata
+    }
+    //ví dụ : image : getimages('filepath')
 
     const user1 = new User({
         "isactive" : true,
         "age" : 21,
         "role" : "admin",
-        "name" : "Sơn Admin",
-        "email" : "songas000@gmail.com",
+        "name" : "Duy Admin",
+        "email" : "hoangduy9669@gmail.com",
         "password" : "$2a$08$7NmbwL/38GSBZ4aKCERMWuoP6xPuuiNB5P8xx2VY/QHuO.1k92Yh2",
         "tokens" : [],
         "gender" : "male",
-        "address" : "2279/131/1 Huỳnh Tấn Phát Nhà bè TPHCM",
-        "password" : "caidkmmlduy",
+        "address" : "Hồng Bàng TPHCM",
+        "password" : "123456789",
         "avatar" : avatarimages
     })
     const user2 = new User({
         "isactive" : true,
         "age" : 13,
         "role" : "user",
-        "name" : "Tùng gà",
-        "email" : "tunggas000@gmail.com",
+        "name" : "Hoàng Duy",
+        "email" : "duyd9669@gmail.com",
         "password" : "$2a$08$J3MfRT8N9MZPxcGlmzo4cODK99Z0sJ/VoMLWd7DOV8vWEhLRYxl9G",
         "tokens" : [],
         "gender" : "male",
-        "address" : "2279/131/1 Huỳnh Tấn Phát Nhà bè TPHCM",
-        "password" : "caiconcax",
+        "address" : "Hồng Bàng TPHCM",
+        "password" : "123456789",
         "avatar": avatarimages
     })
     await user1.save()
@@ -148,13 +159,13 @@ const generateDemoData = async function() {
 
     //tạo 20 sản phẩm
     const dish1 = new Dish({
-        "name": "Fried Rice",
-        "description": "Cơm bỏ lên chảo rồi chiên :)",
-        "price": 5,
-        "promotionprice": 4.5,
+        "name": "Orange Juice",
+        "description": "Orange juice is a liquid extract of the orange tree fruit, produced by squeezing or reaming oranges. It comes in several different varieties, including blood orange, navel oranges, valencia orange, clementine, and tangerine. As well as variations in oranges used, some varieties include differing amounts of juice vesicles, known as pulp in American English, and juicy bits in British English. These vesicles contain the juice of the orange and can be left in or removed during the manufacturing process. How juicy these vesicles are depend upon many factors, such as species, variety, and season. In American English, the beverage name is often abbreviated as OJ.",
+        "price": 15,
+        "promotionprice": 15,
         "kcal": 200,
         "category": category2._id,
-        "mainpicture" : dishimages,
+        "mainpicture" : getimages('kisspng-orange-juice-cocktail-tequila-sunrise-apple-juice-fruit-cocktail-juice-png-5ab1ad10ada7b6.6397521715215936167113.png'),
         "ingredients": [{
             "ingredient": ingredient1._id
         },{
@@ -163,13 +174,13 @@ const generateDemoData = async function() {
 
     })
     const dish2 = new Dish({
-        "name": "Muffer",
-        "description": "Thịt băm nhồi trứng, và được chiên lên",
-        "price": 5,
-        "promotionprice": 5,
+        "name": "Hot Dog",
+        "description": "Hot dog means a whole, cured, cooked sausage that is skinless or stuffed in a casing, that may be known as a frankfurter, frank, furter, wiener, red hot, vienna, bologna, garlic bologna, or knockwurst, and that may be served in a bun or roll.",
+        "price": 15,
+        "promotionprice": 15,
         "kcal": 100,
         "category": category2._id,
-        "mainpicture" : dishimages,
+        "mainpicture" : getimages('hot_dog_PNG10231.png'),
         "ingredients": [{
             "ingredient": ingredient3._id
         },{
@@ -178,13 +189,13 @@ const generateDemoData = async function() {
 
     })
     const dish3 = new Dish({
-        "name": "pudding",
-        "description": "a gel-like appetizer food",
-        "price": 0.5,
-        "promotionprice": 0.5,
+        "name": "Omelette2",
+        "description": "In cuisine, an omelette or omelet is a dish made from beaten eggs, fried with butter or oil in a frying pan (without stirring as in scrambled egg). It is quite common for the omelette to be folded around fillings such as cheese, chives, vegetables, mushrooms, meat (often ham or bacon), or some combination of the above.",
+        "price": 20,
+        "promotionprice": 20,
         "kcal": 20,
         "category": category2._id,
-        "mainpicture" : dishimages,
+        "mainpicture" : getimages('omelette_PNG11.png'),
         "ingredients": [{
             "ingredient": ingredient4._id
         },{
@@ -193,44 +204,45 @@ const generateDemoData = async function() {
 
     })
     const dish4 = new Dish({
-        "name": "cocacola",
-        "description": "nice drink that drives out your thirsty",
-        "price": 1,
-        "promotionprice": 0.8,
+        "name": "Wedding cake",
+        "description": "A wedding cake is the traditional cake served at wedding receptions following dinner. ... In modern Western culture, the cake is usually on display and served to guests at the reception. Traditionally, wedding cakes were made to bring good luck to all guests and the couple.",
+        "price": 30,
+        "promotionprice": 30,
         "kcal": 60,
         "category": category3._id,
-        "mainpicture" : dishimages
+        "mainpicture" : getimages('wedding_cake_PNG19460.png')
     })
     const dish5 = new Dish({ 
-        "name": "pepsi",
-        "description": "nice drink that drives out your thirsty",
+
+        "name": "Pizza", 
+        "description": "Pizza (Italian: [ˈpittsa], Neapolitan: [ˈpittsə]) is a savory dish of Italian origin, consisting of a usually round, flattened base of leavened wheat-based dough topped with tomatoes, cheese, and often various other ingredients (anchovies, olives, meat, etc.) baked at a high temperature, traditionally in a wood-fired ...",
         "price": 1,
         "promotionprice": 1,
         "kcal": 50,
         "category": category3._id,
-        "mainpicture" : dishimages
+        "mainpicture" : getimages('pizza_PNG44044.png')
     })
     const dish6 = new Dish({
-        "name": "Mixed Rice MealBox",
-        "description": "mixed multiple types of rice togethere, make a wonderful taste and lively meals to your interests",
-        "price": 2,
-        "promotionprice": 1.5,
+        "name": "Coca-Cola",
+        "description": "The Coca-Cola Company is a beverage retailer, manufacturer and marketer of non-alcoholic beverage concentrates and syrups. The company's flagship product is Coca-Cola, but it offers more than 500 brands in over 200 countries or territories and serves 1.6bn servings each day",
+        "price": 10,
+        "promotionprice": 10,
         "kcal": 200,
         "category": category1._id,
-        "mainpicture" : dishimages,
+        "mainpicture" : getimages('coca_cola_PNG8915.png'),
         "ingredients": [{
             "ingredient": ingredient1._id
         }]
 
     })
     const dish7 = new Dish({
-        "name": "Standard Box for breakfast",
-        "description": "A simple, popular VietNamese taste mealbox, give you everything your body needs to maintain good health, especially it has wonderful-light taste",
-        "price": 2,
-        "promotionprice": 2,
+        "name": "Cognac",
+        "description": "Cognac is a type of brandy, and after the distillation and during the aging process, is also called eau de vie. It is produced by twice distilling white wines produced in any of the designated growing regions.",
+        "price": 50,
+        "promotionprice": 50,
         "kcal": 200,
         "category": category1._id,
-        "mainpicture" : dishimages,
+        "mainpicture" : getimages('cognac_PNG15160.png'),
         "ingredients": [{
             "ingredient": ingredient1._id
         },{
@@ -241,13 +253,13 @@ const generateDemoData = async function() {
 
     })
     const dish8 = new Dish({
-        "name": "Seafood Mealbox V1 - Light taste",
-        "description": "A box filled with seafood and rice, we make it light taste because you can taste the sweet of the seafood easier",
-        "price": 2.5,
-        "promotionprice": 2.4,
+        "name": "Fried chicken",
+        "description": "Southern fried chicken, also known simply as fried chicken, is a dish consisting of chicken pieces which have been coated in a seasoned batter and pan-fried, deep fried, or pressure fried. The breading adds a crisp coating or crust to the exterior of the chicken while retaining juices in the meat.",
+        "price": 25,
+        "promotionprice": 25,
         "kcal": 200,
         "category": category5._id,
-        "mainpicture" : dishimages,
+        "mainpicture" : getimages('fried_chicken_PNG14105.png'),
         "ingredients": [{
             "ingredient": ingredient1._id
         },{
@@ -257,13 +269,13 @@ const generateDemoData = async function() {
         }]
     })
     const dish9 = new Dish({
-        "name": "Seafood Mealbox V2 - Spicy",
-        "description": "A box filled with seafood and rice, spicy can make seafood much tastier. But if ou dont want it to be too spicy, leave a note for us so we can make it to your taste",
+        "name": "Mashed Potato",
+        "description": "Mashed potato (British English) or mashed potatoes (American English and Canadian English), colloquially known as mash (British English), is a dish prepared by mashing boiled potatoes. Milk, butter, salt and pepper are frequently used in preparation. The dish is usually a side dish to meat or vegetables.",
         "price": 2.5,
         "promotionprice": 2.3,
         "kcal": 300,
         "category": category5._id,
-        "mainpicture" : dishimages,
+        "mainpicture" : getimages('Food-Free-PNG-Image.png'),
         "ingredients": [{
             "ingredient": ingredient1._id
         },{
@@ -273,13 +285,13 @@ const generateDemoData = async function() {
         }]
     })
     const dish10 = new Dish({
-        "name": "Crap Mealbox - soy sauce",
-        "description": "We mix your rice with crap meat and some vegetables, it much tastier if you pour our soy sauce on the rice and mix them up.",
+        "name": "Sandwich",
+        "description": "A sandwich is a food typically consisting of vegetables, sliced cheese or meat, placed on or between slices of bread, or more generally any dish wherein bread serves as a container or wrapper for another food type. ... As well as being homemade, sandwiches are also widely sold in restaurants and can be served hot or cold.",
         "price": 2,
         "promotionprice": 2,
         "kcal": 500,
         "category": category5._id,
-        "mainpicture" : dishimages,
+        "mainpicture" : getimages('Food-PNG-File.png'),
         "ingredients": [{
             "ingredient": ingredient1._id
         },{
@@ -290,24 +302,24 @@ const generateDemoData = async function() {
             "ingredient": ingredient4._id
         }]
     })
-    // const dish11 = new Dish({
-    //     "name": "pepsi",
-    //     "description": "Tung chim teo",
-    //     "price": 10,
-    //     "promotionprice": 9,
-    //     "kcal": 100,
-    //     "category": category2._id,
-    //     "mainpicture" : dishimages
-    // })
-    // const dish12 = new Dish({
-    //     "name": "pepsi",
-    //     "description": "Tung chim teo",
-    //     "price": 10,
-    //     "promotionprice": 9,
-    //     "kcal": 100,
-    //     "category": category2._id,
-    //     "mainpicture" : dishimages
-    // })
+    const dish11 = new Dish({
+        "name": "Beef fried chopped steaks",
+        "description": "Beef fried chopped steaks and chips is an extremely delicious dish that provides plenty of nutrition for the body, enjoy this attractive beef fried dish at SOUL Ben Thanh Restaurant. This is a favorite dish of everyone because of its delicious taste that will awake your taste with softness from beef and sweetness from vegetables and fruits.",
+        "price": 10,
+        "promotionprice": 9,
+        "kcal": 100,
+        "category": category2._id,
+        "mainpicture" : getimages('Food-PNG-HD.png') // để t chỉnh, ok giờ m bỏ tên ảnh vào thôi
+    })
+    const dish12 = new Dish({
+        "name": "Omelette",
+        "description": "According to the founding legend of the annual giant Easter omelette of Bessières, Haute-Garonne, when Napoleon Bonaparte and his army were traveling through southern France, they decided to rest for the night near the town of Bessières. Napoleon feasted on an omelette prepared by a local innkeeper, and thought it was a culinary delight. He then ordered the townspeople to gather all the eggs in the village and to prepare a huge omelette for his army the next day.",
+        "price": 10,
+        "promotionprice": 9,
+        "kcal": 100,
+        "category": category2._id,
+        "mainpicture" : getimages('omelette_PNG23.png')
+    })
     // const dish13 = new Dish({
     //     "name": "pepsi",
     //     "description": "Tung chim teo",
@@ -391,8 +403,8 @@ const generateDemoData = async function() {
     await dish8.save()
     await dish9.save()
     await dish10.save()
-    // await dish11.save()
-    // await dish12.save()
+    await dish11.save()
+    await dish12.save()
     // await dish13.save()
     // await dish14.save()
     // await dish15.save()

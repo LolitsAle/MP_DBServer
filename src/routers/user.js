@@ -428,6 +428,9 @@ router.put('/users/me/updatetable/:tableid', auth, async (req, res) => {
                 //tìm thuộc tính có id cung cấp
                 table.dishes.forEach(item => {
                     if(item._id == req.query.id){
+                        if(item.quantity == 1) {
+                            throw new Error("Cannot perform remove on this item")
+                        }
                         item.quantity --
                         quantity = item.quantity
                         checker = true
