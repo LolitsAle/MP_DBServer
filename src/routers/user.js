@@ -330,7 +330,9 @@ router.post('/users/createnewtable', auth, async (req, res) => {
             userid: req.user._id,
             dishes: []
         })
-    
+        
+        console.log(table);
+
         await table.save()
     
         res.send({status: 'OK'})

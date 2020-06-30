@@ -48,23 +48,34 @@ userTableSchema.methods.calculateTotalPrice = function () {
 }
 
 userTableSchema.pre('save', function(next) {
+    console.log("pre save running")
     const table = this
 
     const code = new Promise((resolve, reject) => {
+        console.log("promise running")
         var totalprice = 0
         var counter = 0
 
         table.dishes.forEach(async item => {
+            console.log("foreach running")
+
             const pdish = await Dish.findById(item.dish)
+            if (!pdish) {
+                throw new Error("Unexpected Error Orcurs")
+            }
 
             totalprice += (pdish.promotionprice * item.quantity)
             counter ++
-
+            
             if(counter === table.dishes.length) {
                 table.totalprice = totalprice
                 resolve()
             }
         })
+
+        if(table.dishes.length == 0){
+            resolve()
+        }
     })
 
     code.then(async ()=> {
